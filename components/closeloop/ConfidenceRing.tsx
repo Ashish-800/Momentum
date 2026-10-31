@@ -24,7 +24,14 @@ export function ConfidenceRing({
   const radius = (size - strokeWidth * 2) / 2;
   const circumference = 2 * Math.PI * radius;
   const dash = (pct / 100) * circumference;
-  const color = confidenceColor(score);
+  
+  // High contrast color depending on score
+  const color =
+    score >= 0.85
+      ? "var(--action)"
+      : score >= 0.7
+      ? "var(--warning)"
+      : "var(--conflict)";
 
   return (
     <div
@@ -45,7 +52,7 @@ export function ConfidenceRing({
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="rgba(255,255,255,0.06)"
+          stroke="var(--border-subtle)"
           strokeWidth={strokeWidth}
         />
         {/* Progress */}
@@ -65,7 +72,7 @@ export function ConfidenceRing({
       </svg>
       {showLabel && (
         <span
-          className="absolute font-mono text-[10px] font-semibold"
+          className="absolute font-mono text-[10px] font-bold"
           style={{ color }}
         >
           {pct}%

@@ -200,15 +200,15 @@ export default function LedgerPage() {
           </p>
         </div>
 
-        {/* Tab Switcher & Export */}
+        {/* View Switcher */}
         <div className="flex items-center gap-3">
-          <div className="neu-inset p-1 rounded-xl flex items-center gap-1 border border-white/5">
+          <div className="neu-inset p-1 rounded-xl flex items-center gap-1 border border-border-subtle bg-recessed">
             <button
               onClick={() => setActiveTab("ledger")}
               className={cn(
-                "px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium transition-all flex items-center gap-2",
+                "px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium transition-all flex items-center gap-2 cursor-pointer",
                 activeTab === "ledger"
-                  ? "neu-raised text-ember font-bold shadow-sm"
+                  ? "bg-surface text-ember font-bold shadow-sm border border-border-subtle"
                   : "text-text-3 hover:text-text-1"
               )}
             >
@@ -218,28 +218,19 @@ export default function LedgerPage() {
             <button
               onClick={() => setActiveTab("radar")}
               className={cn(
-                "px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium transition-all flex items-center gap-2 relative",
+                "px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium transition-all flex items-center gap-2 relative cursor-pointer",
                 activeTab === "radar"
-                  ? "neu-raised text-conflict font-bold shadow-sm"
+                  ? "bg-surface text-rose-600 dark:text-rose-400 font-bold shadow-sm border border-border-subtle"
                   : "text-text-3 hover:text-text-1"
               )}
             >
               <ShieldAlert size={13} />
               <span>3D Conflict Radar</span>
               {conflicts.filter((c: any) => c.status === "open").length > 0 && (
-                <span className="w-2 h-2 rounded-full bg-conflict animate-ping" />
+                <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
               )}
             </button>
           </div>
-
-          <button
-            onClick={handleExportMarkdown}
-            className="neu-button px-3.5 py-2 rounded-xl flex items-center gap-2 text-xs font-mono text-text-2 hover:text-ember transition-colors"
-            title="Download Decision Ledger as Markdown"
-          >
-            <Download size={13} />
-            <span className="hidden sm:inline">Export MD</span>
-          </button>
         </div>
       </div>
 
@@ -250,7 +241,7 @@ export default function LedgerPage() {
             initial={{ opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
-            className="neu-raised px-4 py-2.5 rounded-xl border border-action/30 bg-action/10 text-action text-xs font-mono flex items-center gap-2"
+            className="neu-raised px-4 py-2.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-xs font-mono flex items-center gap-2 shadow-lg"
           >
             <CheckCircle2 size={14} />
             <span>{toastMessage}</span>
@@ -261,10 +252,10 @@ export default function LedgerPage() {
       {/* ── TAB 1: DECISION LEDGER ───────────────────────────── */}
       {activeTab === "ledger" && (
         <div className="space-y-6">
-          {/* Filter & Search Bar */}
-          <div className="neu-raised p-4 rounded-2xl flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 border border-white/5">
+          {/* Streamlined Filter & Search Bar */}
+          <div className="neu-raised p-4 rounded-2xl flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 border border-border-subtle bg-surface">
             {/* Search */}
-            <div className="flex-1 neu-inset px-3 py-2 rounded-xl flex items-center gap-2 border border-white/5">
+            <div className="flex-1 neu-inset px-3 py-2 rounded-xl flex items-center gap-2 border border-border-subtle bg-recessed">
               <Search size={14} className="text-text-3 flex-shrink-0" />
               <input
                 type="text"
@@ -276,49 +267,41 @@ export default function LedgerPage() {
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery("")}
-                  className="text-xs text-text-3 hover:text-text-1"
+                  className="text-xs text-text-3 hover:text-text-1 cursor-pointer"
                 >
                   Clear
                 </button>
               )}
             </div>
 
-            {/* Topic Filter */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0">
-              <span className="text-[10px] font-mono text-text-3 uppercase tracking-wider pl-1">
-                Topic:
-              </span>
-              {["all", "launch-date", "platform-scope", "budget", "ownership", "design"].map(
-                (topic) => (
-                  <button
-                    key={topic}
-                    onClick={() => setSelectedTopic(topic)}
-                    className={cn(
-                      "px-2.5 py-1 rounded-lg text-[11px] font-mono whitespace-nowrap transition-all",
-                      selectedTopic === topic
-                        ? "neu-inset text-ember font-bold border border-ember/30"
-                        : "neu-raised text-text-3 hover:text-text-1"
-                    )}
-                  >
-                    {topic.replace("-", " ")}
-                  </button>
-                )
-              )}
+            {/* Topic Dropdown */}
+            <div className="flex items-center gap-2">
+              <select
+                value={selectedTopic}
+                onChange={(e) => setSelectedTopic(e.target.value)}
+                className="px-3 py-2 rounded-xl text-xs font-mono bg-surface border border-border-subtle text-text-1 outline-none cursor-pointer"
+              >
+                <option value="all">All Topics</option>
+                <option value="launch-date">Launch Date</option>
+                <option value="platform-scope">Platform Scope</option>
+                <option value="budget">Budget</option>
+                <option value="ownership">Ownership</option>
+                <option value="design">Design</option>
+                <option value="qa">QA</option>
+                <option value="marketing">Marketing</option>
+              </select>
             </div>
 
             {/* Status Filter */}
-            <div className="flex items-center gap-1.5">
-              <span className="text-[10px] font-mono text-text-3 uppercase tracking-wider pl-1">
-                Status:
-              </span>
+            <div className="flex items-center gap-1 border-l border-border-subtle pl-2">
               {["all", "active", "superseded", "proposed"].map((st) => (
                 <button
                   key={st}
                   onClick={() => setSelectedStatus(st)}
                   className={cn(
-                    "px-2 py-1 rounded-lg text-[10px] font-mono capitalize transition-all",
+                    "px-2.5 py-1.5 rounded-lg text-[11px] font-mono capitalize transition-all cursor-pointer",
                     selectedStatus === st
-                      ? "neu-inset text-text-1 font-bold border border-white/10"
+                      ? "btn-secondary font-bold text-text-1 border-border-strong"
                       : "text-text-3 hover:text-text-2"
                   )}
                 >
@@ -355,8 +338,8 @@ export default function LedgerPage() {
                       <motion.div
                         key={dec.id}
                         className={cn(
-                          "neu-raised p-5 rounded-2xl relative overflow-hidden transition-all",
-                          isSuperseded && "opacity-75 border-l-2 border-l-text-3/40"
+                          "neu-raised p-5 rounded-2xl relative overflow-hidden transition-all bg-surface border border-border-subtle",
+                          isSuperseded && "opacity-75 border-l-4 border-l-text-3"
                         )}
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -369,7 +352,7 @@ export default function LedgerPage() {
                               <span
                                 className={cn(
                                   "inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-mono font-semibold uppercase tracking-wider",
-                                  statusClass(dec.status)
+                                  dec.status === "active" ? "pill-success" : dec.status === "superseded" ? "pill-warning" : "pill-info"
                                 )}
                               >
                                 {statusLabel(dec.status)}
@@ -411,9 +394,9 @@ export default function LedgerPage() {
 
                             {/* ── VISUAL LINEAGE CHAIN ────────────────── */}
                             {lineage.length > 0 && (
-                              <div className="neu-inset rounded-xl p-3 mb-3 border border-white/5 space-y-1.5">
-                                <div className="flex items-center gap-1.5 text-[10px] font-mono text-text-3 uppercase tracking-wider">
-                                  <GitBranch size={11} className="text-ember" />
+                              <div className="rounded-xl p-3 mb-3 border-l-[3px] border-l-indigo-500 bg-recessed border border-border-subtle space-y-1.5">
+                                <div className="flex items-center gap-1.5 text-[10px] font-mono text-indigo-600 dark:text-indigo-400 font-bold uppercase tracking-wider">
+                                  <GitBranch size={11} />
                                   <span>Decision Lineage Chain</span>
                                 </div>
                                 {lineage.map(({ item, relation }: any) => (
@@ -427,18 +410,18 @@ export default function LedgerPage() {
                                         <span className="line-through text-text-3">
                                           {item.statement}
                                         </span>
-                                        <span className="text-[9px] px-1.5 py-0.2 rounded bg-raised text-text-3">
+                                        <span className="text-[9px] px-1.5 py-0.2 rounded bg-surface border border-border-subtle text-text-3 font-bold">
                                           Previous
                                         </span>
                                       </>
                                     ) : (
                                       <>
-                                        <span className="text-text-3">Superseded by:</span>
+                                        <span className="text-text-3">↳ Superseded by:</span>
                                         <ArrowRight size={12} className="text-ember" />
-                                        <span className="text-decision font-semibold">
+                                        <span className="text-indigo-600 dark:text-indigo-400 font-semibold">
                                           {item.statement}
                                         </span>
-                                        <span className="text-[9px] px-1.5 py-0.2 rounded bg-action/20 text-action">
+                                        <span className="text-[9px] px-1.5 py-0.2 rounded pill-success">
                                           Active Consensus
                                         </span>
                                       </>
@@ -466,14 +449,12 @@ export default function LedgerPage() {
                                 Logged: {formatDateIST(dec.createdAt)}
                               </span>
 
-                              {Array.isArray(dec.evidenceUtteranceIds) &&
-                                dec.evidenceUtteranceIds.map((uid: string) => (
-                                  <EvidenceChip
-                                    key={uid}
-                                    utteranceId={uid}
-                                    speakerName="source transcript"
-                                  />
-                                ))}
+                              {Array.isArray(dec.evidenceUtteranceIds) && dec.evidenceUtteranceIds.length > 0 && (
+                                <EvidenceChip
+                                  utteranceId={dec.evidenceUtteranceIds[0]}
+                                  speakerName="View Source Transcript"
+                                />
+                              )}
                             </div>
                           </div>
 
@@ -629,25 +610,30 @@ export default function LedgerPage() {
                     {/* Downstream Actions impacted */}
                     {activeConflict.downstreamActionIds &&
                       activeConflict.downstreamActionIds.length > 0 && (
-                        <div className="neu-inset p-2.5 rounded-xl border border-white/5">
-                          <span className="text-[9px] font-mono text-text-3 uppercase tracking-wider block mb-1">
-                            Downstream Blocked Actions ({activeConflict.downstreamActionIds.length})
+                        <div className="p-3 rounded-xl border border-border-subtle bg-recessed">
+                          <span className="text-[10px] font-mono text-text-3 uppercase tracking-wider block mb-2 font-bold">
+                            Downstream Impacted Tasks ({activeConflict.downstreamActionIds.length})
                           </span>
-                          <div className="text-[11px] font-mono text-text-2 space-y-0.5">
-                            {activeConflict.downstreamActionIds.map((aid: string) => (
-                              <div key={aid} className="flex items-center gap-1.5">
-                                <span className="text-warning">⚠</span>
-                                <span>Action ID: {aid}</span>
-                              </div>
-                            ))}
+                          <div className="text-xs font-mono space-y-1.5">
+                            {activeConflict.downstreamActionIds.map((aid: string) => {
+                              let label = aid;
+                              if (aid.includes("arjun") || aid.includes("release_branch")) label = "Arjun Rao — Cut release branch";
+                              else if (aid.includes("rohan") || aid.includes("campaign_brief")) label = "Rohan Gupta — Deliver launch campaign brief";
+                              return (
+                                <div key={aid} className="flex items-center justify-between p-2 rounded-lg bg-surface border border-border-subtle">
+                                  <span className="text-text-1 font-semibold">{label}</span>
+                                  <span className="text-rose-600 dark:text-rose-400 font-bold text-[10px]">Review Required</span>
+                                </div>
+                              );
+                            })}
                           </div>
                         </div>
                       )}
 
                     {/* Immediate 4-Action Resolution Buttons */}
                     {activeConflict.status === "open" ? (
-                      <div className="space-y-2 pt-2 border-t border-white/5">
-                        <span className="text-[10px] font-mono text-text-3 uppercase tracking-wider block">
+                      <div className="space-y-2 pt-2 border-t border-border-subtle">
+                        <span className="text-[10px] font-mono text-text-3 uppercase tracking-wider block font-bold">
                           Execute Resolution Gate
                         </span>
                         <div className="grid grid-cols-2 gap-2">
@@ -656,11 +642,11 @@ export default function LedgerPage() {
                               handleResolveConflict(activeConflict.id, "resolved_supersede")
                             }
                             disabled={resolvingId === activeConflict.id}
-                            className="neu-button px-3 py-2 rounded-xl text-left text-xs font-mono font-semibold text-action hover:bg-action/10 border border-action/30 transition-all"
+                            className="btn-primary p-2.5 rounded-xl text-left cursor-pointer transition-all shadow-sm"
                           >
-                            <span className="block font-bold">Accept & Supersede</span>
-                            <span className="text-[9px] text-text-3 font-normal">
-                              Adopt 1 Dec launch
+                            <span className="block font-bold text-xs text-white">Accept 1 Dec</span>
+                            <span className="text-[10px] text-white/80 font-normal">
+                              Supersede baseline
                             </span>
                           </button>
 
@@ -669,10 +655,10 @@ export default function LedgerPage() {
                               handleResolveConflict(activeConflict.id, "resolved_keep_old")
                             }
                             disabled={resolvingId === activeConflict.id}
-                            className="neu-button px-3 py-2 rounded-xl text-left text-xs font-mono font-semibold text-text-1 hover:text-ember transition-all"
+                            className="btn-secondary p-2.5 rounded-xl text-left cursor-pointer transition-all"
                           >
-                            <span className="block font-bold">Keep 15 Nov</span>
-                            <span className="text-[9px] text-text-3 font-normal">
+                            <span className="block font-bold text-xs text-text-1">Keep 15 Nov</span>
+                            <span className="text-[10px] text-text-3 font-normal">
                               Reject 1 Dec slip
                             </span>
                           </button>
@@ -682,11 +668,11 @@ export default function LedgerPage() {
                               handleResolveConflict(activeConflict.id, "resolved_escalated")
                             }
                             disabled={resolvingId === activeConflict.id}
-                            className="neu-button px-3 py-2 rounded-xl text-left text-xs font-mono font-semibold text-warning hover:bg-warning/10 border border-warning/30 transition-all"
+                            className="btn-secondary p-2.5 rounded-xl text-left cursor-pointer transition-all"
                           >
-                            <span className="block font-bold">Escalate</span>
-                            <span className="text-[9px] text-text-3 font-normal">
-                              Flag to leadership
+                            <span className="block font-bold text-xs text-text-1">Escalate</span>
+                            <span className="text-[10px] text-text-3 font-normal">
+                              Flag to Priya
                             </span>
                           </button>
 
@@ -695,17 +681,17 @@ export default function LedgerPage() {
                               handleResolveConflict(activeConflict.id, "resolved_both_valid")
                             }
                             disabled={resolvingId === activeConflict.id}
-                            className="neu-button px-3 py-2 rounded-xl text-left text-xs font-mono font-semibold text-text-2 hover:text-text-1 transition-all"
+                            className="btn-secondary p-2.5 rounded-xl text-left cursor-pointer transition-all"
                           >
-                            <span className="block font-bold">Both Valid</span>
-                            <span className="text-[9px] text-text-3 font-normal">
-                              Staggered scope
+                            <span className="block font-bold text-xs text-text-1">Both Valid</span>
+                            <span className="text-[10px] text-text-3 font-normal">
+                              Dual track
                             </span>
                           </button>
                         </div>
                       </div>
                     ) : (
-                      <div className="neu-inset p-3 rounded-xl border border-action/20 bg-action/5 text-xs text-action font-mono">
+                      <div className="pill-success p-3 rounded-xl text-xs font-mono font-bold">
                         ✓ This conflict was resolved ({activeConflict.status}). Lineage chain has been synchronized.
                       </div>
                     )}

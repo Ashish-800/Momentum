@@ -238,37 +238,17 @@ export default function WeekPage() {
         )}
       </AnimatePresence>
 
-      {/* ── Filters Bar ────────────────────────────────────────── */}
-      <div className="neu-raised p-4 rounded-2xl flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 border border-white/5">
-        {/* Search */}
-        <div className="flex-1 neu-inset px-3 py-2 rounded-xl flex items-center gap-2 border border-white/5">
-          <Search size={14} className="text-text-3 flex-shrink-0" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search tasks, descriptions, or assignees..."
-            className="w-full bg-transparent text-xs text-text-1 placeholder:text-text-3 outline-none"
-          />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery("")}
-              className="text-xs text-text-3 hover:text-text-1"
-            >
-              Clear
-            </button>
-          )}
-        </div>
-
+      {/* ── Filters Bar (De-cluttered: Team Switcher + View Mode) ── */}
+      <div className="neu-raised p-3 rounded-2xl flex flex-wrap items-center justify-between gap-3 border border-border-subtle bg-surface">
         {/* Team Member Switcher */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 lg:pb-0">
           <button
             onClick={() => setSelectedOwnerId("all")}
             className={cn(
-              "px-3 py-1.5 rounded-xl text-xs font-mono whitespace-nowrap transition-all",
+              "px-3 py-1.5 rounded-xl text-xs font-mono whitespace-nowrap transition-all cursor-pointer",
               selectedOwnerId === "all"
-                ? "neu-inset text-ember font-bold border border-ember/30"
-                : "neu-raised text-text-3 hover:text-text-1"
+                ? "bg-surface text-ember font-bold border border-ember/40 shadow-sm"
+                : "btn-secondary text-text-3 hover:text-text-1"
             )}
           >
             All Team
@@ -278,10 +258,10 @@ export default function WeekPage() {
               key={p.id}
               onClick={() => setSelectedOwnerId(p.id)}
               className={cn(
-                "px-2.5 py-1.5 rounded-xl text-xs font-mono whitespace-nowrap transition-all flex items-center gap-1.5",
+                "px-2.5 py-1.5 rounded-xl text-xs font-mono whitespace-nowrap transition-all flex items-center gap-1.5 cursor-pointer",
                 selectedOwnerId === p.id
-                  ? "neu-inset font-bold border border-white/20"
-                  : "neu-raised text-text-3 hover:text-text-1"
+                  ? "bg-surface font-bold border border-border-strong shadow-sm"
+                  : "btn-secondary text-text-3 hover:text-text-1"
               )}
               style={selectedOwnerId === p.id ? { color: p.accentColor || "#FF7A1A" } : {}}
             >
@@ -294,25 +274,32 @@ export default function WeekPage() {
           ))}
         </div>
 
-        {/* Priority Filter */}
-        <div className="flex items-center gap-1.5">
-          <span className="text-[10px] font-mono text-text-3 uppercase tracking-wider pl-1">
-            Priority:
-          </span>
-          {["all", "critical", "high", "medium"].map((prio) => (
-            <button
-              key={prio}
-              onClick={() => setSelectedPriority(prio)}
-              className={cn(
-                "px-2 py-1 rounded-lg text-[10px] font-mono capitalize transition-all",
-                selectedPriority === prio
-                  ? "neu-inset text-text-1 font-bold border border-white/10"
-                  : "text-text-3 hover:text-text-2"
-              )}
-            >
-              {prio}
-            </button>
-          ))}
+        {/* View Mode Toggle */}
+        <div className="flex items-center gap-1 p-1 rounded-xl bg-recessed border border-border-subtle">
+          <button
+            onClick={() => setViewMode("kanban")}
+            className={cn(
+              "px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all flex items-center gap-1.5 cursor-pointer",
+              viewMode === "kanban"
+                ? "bg-surface text-ember font-bold shadow-sm border border-border-subtle"
+                : "text-text-3 hover:text-text-1"
+            )}
+          >
+            <Kanban size={14} />
+            <span>Kanban</span>
+          </button>
+          <button
+            onClick={() => setViewMode("list")}
+            className={cn(
+              "px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all flex items-center gap-1.5 cursor-pointer",
+              viewMode === "list"
+                ? "bg-surface text-ember font-bold shadow-sm border border-border-subtle"
+                : "text-text-3 hover:text-text-1"
+            )}
+          >
+            <List size={14} />
+            <span>List</span>
+          </button>
         </div>
       </div>
 
@@ -325,10 +312,10 @@ export default function WeekPage() {
             return (
               <div
                 key={lane.id}
-                className="neu-inset p-3.5 rounded-2xl min-h-[500px] flex flex-col gap-3 border border-white/5"
+                className="bg-recessed/40 p-3.5 rounded-2xl min-h-[500px] flex flex-col gap-3 border border-border-subtle"
               >
                 {/* Lane Header */}
-                <div className="flex items-center justify-between pb-2 border-b border-white/5 px-1">
+                <div className="flex items-center justify-between pb-2 border-b border-border-subtle px-1">
                   <div className="flex items-center gap-2">
                     <span className="font-display font-semibold text-xs text-text-1">
                       {lane.label}
@@ -337,12 +324,25 @@ export default function WeekPage() {
                   <span
                     className={cn(
                       "px-2 py-0.5 rounded-full text-[10px] font-mono font-bold",
-                      lane.badgeColor
+                      lane.id === "completed"
+                        ? "pill-success"
+                        : lane.id === "blocked"
+                        ? "pill-conflict"
+                        : lane.id === "in_progress"
+                        ? "pill-warning"
+                        : "bg-surface border border-border-subtle text-text-2"
                     )}
                   >
                     {laneTasks.length}
                   </span>
                 </div>
+
+                {/* Empty State */}
+                {laneTasks.length === 0 && (
+                  <div className="h-36 rounded-xl border border-dashed border-border-strong flex flex-col items-center justify-center text-xs text-text-3 font-mono">
+                    <span>No tasks in {lane.label}</span>
+                  </div>
+                )}
 
                 {/* Lane Cards */}
                 <div className="space-y-3 flex-1">
@@ -352,9 +352,9 @@ export default function WeekPage() {
                       layoutId={task.id}
                       onClick={() => setSelectedTask(task)}
                       className={cn(
-                        "neu-raised p-4 rounded-xl cursor-pointer group transition-all relative overflow-hidden border border-white/5 hover:border-ember/30",
-                        task.status === "completed" && "opacity-60",
-                        task.priority === "critical" && "border-l-2 border-l-conflict"
+                        "neu-raised p-4 rounded-xl cursor-pointer group transition-all relative overflow-hidden bg-surface border border-border-subtle hover:border-ember/40 shadow-sm",
+                        task.priority === "critical" && "border-l-4 border-l-rose-500",
+                        task.status === "completed" && "opacity-80"
                       )}
                     >
                       {/* Priority & Due Badge */}
@@ -363,10 +363,10 @@ export default function WeekPage() {
                           className={cn(
                             "px-2 py-0.5 rounded text-[9px] font-mono font-bold uppercase",
                             task.priority === "critical"
-                              ? "bg-conflict/20 text-conflict"
+                              ? "pill-conflict"
                               : task.priority === "high"
-                              ? "bg-warning/20 text-warning"
-                              : "bg-raised text-text-3"
+                              ? "pill-warning"
+                              : "bg-recessed text-text-2 border border-border-subtle"
                           )}
                         >
                           {task.priority}
@@ -377,7 +377,7 @@ export default function WeekPage() {
                             className={cn(
                               "text-[10px] font-mono flex items-center gap-1",
                               task.status === "overdue"
-                                ? "text-conflict font-bold"
+                                ? "text-rose-600 dark:text-rose-400 font-bold"
                                 : "text-text-3"
                             )}
                           >
@@ -388,24 +388,24 @@ export default function WeekPage() {
                       </div>
 
                       {/* Title */}
-                      <h4
-                        className={cn(
-                          "text-xs font-display font-semibold text-text-1 leading-snug mb-2 group-hover:text-ember transition-colors",
-                          task.status === "completed" && "line-through text-text-3"
+                      <div className="flex items-start gap-1.5 mb-2">
+                        {task.status === "completed" && (
+                          <span className="text-emerald-600 dark:text-emerald-400 font-bold text-xs">✓</span>
                         )}
-                      >
-                        {task.title}
-                      </h4>
+                        <h4 className="text-xs font-display font-semibold text-text-1 leading-snug group-hover:text-ember transition-colors">
+                          {task.title}
+                        </h4>
+                      </div>
 
                       {/* Description preview */}
                       {task.description && (
-                        <p className="text-[11px] text-text-3 line-clamp-2 leading-relaxed mb-3 font-ui">
+                        <p className="text-[11px] text-text-2 line-clamp-2 leading-relaxed mb-3 font-ui">
                           {task.description}
                         </p>
                       )}
 
                       {/* Footer: Owner Avatar & Sync Tag */}
-                      <div className="flex items-center justify-between pt-2 border-t border-white/5 text-[10px] font-mono">
+                      <div className="flex items-center justify-between pt-2 border-t border-border-subtle text-[10px] font-mono">
                         <div className="flex items-center gap-1.5">
                           {task.owner ? (
                             <span
@@ -418,14 +418,14 @@ export default function WeekPage() {
                           ) : (
                             <User size={12} className="text-text-3" />
                           )}
-                          <span className="text-text-3">
+                          <span className="text-text-2 font-medium">
                             {task.owner?.name?.split(" ")[0] || task.ownerNameRaw || "Unassigned"}
                           </span>
                         </div>
 
                         {/* External Sync Badge */}
                         {task.externalRef ? (
-                          <span className="text-[9px] px-1.5 py-0.5 rounded bg-action/10 text-action border border-action/20 capitalize flex items-center gap-1">
+                          <span className="text-[9px] px-1.5 py-0.5 rounded pill-success capitalize flex items-center gap-1 font-bold">
                             <span>{task.externalRef.provider}</span>
                           </span>
                         ) : (
@@ -434,39 +434,20 @@ export default function WeekPage() {
                       </div>
 
                       {/* Quick Move Trigger on Hover */}
-                      <div className="mt-2 pt-2 flex items-center justify-between border-t border-white/5 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="mt-2 pt-2 flex items-center justify-between border-t border-border-subtle opacity-0 group-hover:opacity-100 transition-opacity">
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             handleToggleComplete(task);
                           }}
-                          className="text-[10px] font-mono text-text-3 hover:text-action flex items-center gap-1"
+                          className="text-[10px] font-mono text-text-3 hover:text-emerald-600 flex items-center gap-1 cursor-pointer"
                         >
                           <Check size={11} />
                           <span>{task.status === "completed" ? "Reopen" : "Mark Done"}</span>
                         </button>
-
-                        {task.status !== "in_progress" && task.status !== "completed" && (
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleUpdateStatus(task.id, "in_progress");
-                            }}
-                            className="text-[10px] font-mono text-text-3 hover:text-ember flex items-center gap-1"
-                          >
-                            <span>Start</span>
-                            <ArrowRight size={10} />
-                          </button>
-                        )}
                       </div>
                     </motion.div>
                   ))}
-
-                  {laneTasks.length === 0 && (
-                    <div className="h-32 flex items-center justify-center text-xs text-text-3/60 font-mono">
-                      Empty lane
-                    </div>
-                  )}
                 </div>
               </div>
             );
@@ -598,18 +579,18 @@ export default function WeekPage() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="w-full max-w-lg h-dvh bg-bg-1 border-l border-white/10 p-6 flex flex-col justify-between overflow-y-auto neu-raised shadow-2xl"
+              className="w-full max-w-lg h-dvh bg-surface border-l border-border-strong p-6 flex flex-col justify-between overflow-y-auto neu-raised shadow-2xl text-text-1"
             >
               <div className="space-y-6">
                 {/* Drawer Header */}
-                <div className="flex items-center justify-between border-b border-white/5 pb-4">
+                <div className="flex items-center justify-between border-b border-border-subtle pb-4">
                   <div className="flex items-center gap-2">
                     <span
                       className={cn(
                         "w-2.5 h-2.5 rounded-full",
                         selectedTask.priority === "critical"
-                          ? "bg-conflict shadow-[0_0_8px_#FF4D6D]"
-                          : "bg-warning"
+                          ? "bg-rose-500"
+                          : "bg-amber-500"
                       )}
                     />
                     <span className="text-xs font-mono font-semibold uppercase tracking-wider text-text-3">
@@ -618,7 +599,7 @@ export default function WeekPage() {
                   </div>
                   <button
                     onClick={() => setSelectedTask(null)}
-                    className="p-1.5 rounded-lg neu-button text-text-3 hover:text-text-1"
+                    className="p-1.5 rounded-lg btn-secondary text-text-3 hover:text-text-1 cursor-pointer"
                   >
                     <X size={16} />
                   </button>
@@ -626,10 +607,10 @@ export default function WeekPage() {
 
                 {/* Status Switcher Bar */}
                 <div className="space-y-2">
-                  <span className="text-[10px] font-mono text-text-3 uppercase tracking-wider">
+                  <span className="text-[10px] font-mono text-text-3 uppercase tracking-wider font-bold">
                     Task Status
                   </span>
-                  <div className="grid grid-cols-4 gap-1.5 neu-inset p-1 rounded-xl">
+                  <div className="grid grid-cols-4 gap-1.5 neu-inset p-1 rounded-xl bg-recessed border border-border-subtle">
                     {[
                       { id: "approved", label: "To Do" },
                       { id: "in_progress", label: "In Progress" },
@@ -641,9 +622,9 @@ export default function WeekPage() {
                         onClick={() => handleUpdateStatus(selectedTask.id, st.id)}
                         disabled={isUpdating}
                         className={cn(
-                          "py-1 rounded-lg text-xs font-mono font-semibold transition-all",
+                          "py-1.5 rounded-lg text-xs font-mono font-semibold transition-all cursor-pointer",
                           selectedTask.status === st.id
-                            ? "neu-raised text-ember font-bold shadow-sm"
+                            ? "bg-surface text-ember font-bold shadow-sm border border-border-subtle"
                             : "text-text-3 hover:text-text-1"
                         )}
                       >
@@ -659,7 +640,7 @@ export default function WeekPage() {
                     {selectedTask.title}
                   </h3>
                   {selectedTask.description && (
-                    <p className="text-xs text-text-2 leading-relaxed font-ui bg-bg-0/50 p-3 rounded-xl border border-white/5">
+                    <p className="text-xs text-text-2 leading-relaxed font-ui bg-recessed p-3 rounded-xl border border-border-subtle">
                       {selectedTask.description}
                     </p>
                   )}
@@ -667,8 +648,8 @@ export default function WeekPage() {
 
                 {/* Parent Decision Context */}
                 {selectedTask.decisionStatement && (
-                  <div className="neu-inset p-3.5 rounded-xl border border-white/5 space-y-1">
-                    <span className="text-[10px] font-mono text-text-3 uppercase tracking-wider block">
+                  <div className="p-3.5 rounded-xl border border-border-subtle bg-recessed space-y-1">
+                    <span className="text-[10px] font-mono text-text-3 uppercase tracking-wider block font-bold">
                       Parent Institutional Decision
                     </span>
                     <p className="text-xs text-text-1 font-semibold">
@@ -678,13 +659,13 @@ export default function WeekPage() {
                 )}
 
                 {/* Meeting Provenance & Evidence Chips */}
-                <div className="neu-inset p-3.5 rounded-xl border border-white/5 space-y-2">
-                  <span className="text-[10px] font-mono text-text-3 uppercase tracking-wider block">
+                <div className="p-3.5 rounded-xl border border-border-subtle bg-recessed space-y-2">
+                  <span className="text-[10px] font-mono text-text-3 uppercase tracking-wider block font-bold">
                     Source Meeting & Evidence
                   </span>
                   {selectedTask.meetingTitle && (
                     <div className="flex items-center justify-between text-xs font-mono text-text-2">
-                      <span>{selectedTask.meetingTitle}</span>
+                      <span className="font-medium text-text-1">{selectedTask.meetingTitle}</span>
                       {selectedTask.meetingId && (
                         <Link
                           href={`/meetings/${selectedTask.meetingId}`}
@@ -700,23 +681,20 @@ export default function WeekPage() {
                   {Array.isArray(selectedTask.evidenceUtteranceIds) &&
                     selectedTask.evidenceUtteranceIds.length > 0 && (
                       <div className="flex items-center gap-2 flex-wrap pt-1">
-                        {selectedTask.evidenceUtteranceIds.map((uid: string) => (
-                          <EvidenceChip
-                            key={uid}
-                            utteranceId={uid}
-                            speakerName={selectedTask.ownerNameRaw || "speaker"}
-                          />
-                        ))}
+                        <EvidenceChip
+                          utteranceId={selectedTask.evidenceUtteranceIds[0]}
+                          speakerName="View Source Transcript"
+                        />
                       </div>
                     )}
                 </div>
 
                 {/* Scheduled Reminders Engine */}
-                <div className="neu-inset p-3.5 rounded-xl border border-white/5 space-y-2">
+                <div className="p-3.5 rounded-xl border border-border-subtle bg-recessed space-y-2">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
                       <Bell size={13} className="text-ember" />
-                      <span className="text-[10px] font-mono text-text-3 uppercase tracking-wider">
+                      <span className="text-[10px] font-mono text-text-3 uppercase tracking-wider font-bold">
                         Scheduled Time Machine Reminders
                       </span>
                     </div>
@@ -730,16 +708,16 @@ export default function WeekPage() {
                       {selectedTask.reminders.map((r: any) => (
                         <div
                           key={r.id}
-                          className="flex items-center justify-between p-2 rounded-lg bg-bg-0/60 text-xs font-mono"
+                          className="flex items-center justify-between p-2 rounded-lg bg-surface border border-border-subtle text-xs font-mono"
                         >
                           <div className="flex items-center gap-2">
                             <span
                               className={cn(
                                 "w-1.5 h-1.5 rounded-full",
-                                r.status === "fired" ? "bg-action" : "bg-warning"
+                                r.status === "fired" ? "bg-emerald-500" : "bg-amber-500"
                               )}
                             />
-                            <span className="text-text-2 uppercase text-[10px] font-bold">
+                            <span className="text-text-1 uppercase text-[10px] font-bold">
                               {r.leadHours}h Before
                             </span>
                             <span className="text-text-3 text-[11px]">
@@ -750,8 +728,8 @@ export default function WeekPage() {
                             className={cn(
                               "text-[9px] uppercase px-1.5 py-0.2 rounded font-bold",
                               r.status === "fired"
-                                ? "bg-action/20 text-action"
-                                : "bg-warning/20 text-warning"
+                                ? "pill-success"
+                                : "pill-warning"
                             )}
                           >
                             {r.status}

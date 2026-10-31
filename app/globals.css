@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 /* ============================================================
-   CLOSELOOP — TACTILE OBSIDIAN & EMBER DESIGN SYSTEM
-   Master Design Tokens & Neumorphic Physics
+   CLOSELOOP — PRECISION TACTILE DESIGN SYSTEM
+   High-Contrast Light & Dark Themes (Inspired by Linear & macOS)
    ============================================================ */
 
 @theme {
@@ -11,20 +11,22 @@
   --color-surface: var(--surface);
   --color-raised: var(--raised);
   --color-recessed: var(--recessed);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-strong: var(--border-strong);
   --color-text-1: var(--text-1);
   --color-text-2: var(--text-2);
   --color-text-3: var(--text-3);
 
-  --color-ember: #FF7A1A;
-  --color-ember-hot: #FF5500;
-  --color-ember-glow: #FFB347;
+  --color-ember: #EA580C;
+  --color-ember-hot: #C2410C;
+  --color-ember-glow: #F97316;
 
-  --color-decision: #8C9CFF;
-  --color-action: #34D8AB;
-  --color-conflict: #FF4D6D;
-  --color-warning: #FFC247;
-  --color-success: #4ADE80;
-  --color-info: #5CC8FF;
+  --color-decision: #4F46E5;
+  --color-action: #059669;
+  --color-conflict: #E11D48;
+  --color-warning: #D97706;
+  --color-success: #16A34A;
+  --color-info: #0284C7;
 
   --font-family-display: var(--font-inter-tight), "Inter Tight", sans-serif;
   --font-family-ui: var(--font-geist-sans), "Geist", sans-serif;
@@ -32,57 +34,71 @@
   --font-family-accent: var(--font-instrument-serif), "Instrument Serif", serif;
 }
 
-/* ── Dark Theme (Default — "Obsidian Soft Clay") ────────────── */
-:root,
-[data-theme="dark"] {
-  --bg-0: #0B0E14;
-  --bg-1: #12161F;
-  --surface: #161B26;
-  --raised: #1C2230;
-  --recessed: #0D1017;
-  --text-1: #F4F6F9;
-  --text-2: #A8B0C0;
-  --text-3: #6E7787;
+/* ── Light Theme (Crisp Daylight — Clean Cool Alabaster) ──── */
+[data-theme="light"] {
+  --bg-0: #F8FAFC;
+  --bg-1: #FFFFFF;
+  --surface: #FFFFFF;
+  --raised: #FFFFFF;
+  --recessed: #F1F5F9;
+  --border-subtle: #E2E8F0;
+  --border-strong: #CBD5E1;
+  --text-1: #0F172A;
+  --text-2: #334155;
+  --text-3: #475569;
 
-  --ember: #FF7A1A;
-  --ember-hot: #FF5500;
-  --ember-glow: #FFB347;
-  --decision: #8C9CFF;
-  --action: #34D8AB;
-  --conflict: #FF4D6D;
-  --warning: #FFC247;
-  --success: #4ADE80;
-  --info: #5CC8FF;
+  --ember: #EA580C;
+  --ember-hot: #C2410C;
+  --ember-glow: #F97316;
+  --decision: #4F46E5;
+  --action: #059669;
+  --conflict: #E11D48;
+  --warning: #D97706;
+  --success: #16A34A;
+  --info: #0284C7;
 
-  --neu-raised-bg: linear-gradient(145deg, #181E2A, #131720);
-  --neu-raised-shadow: 8px 8px 18px #07090D, -6px -6px 14px #212838, inset 0 1px 0 rgba(255, 255, 255, 0.07);
-  --neu-raised-sm-shadow: 4px 4px 10px #07090D, -3px -3px 8px #212838, inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  --neu-raised-bg: #FFFFFF;
+  --neu-raised-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.03);
+  --neu-raised-sm-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
 
-  --neu-inset-bg: #0D1017;
-  --neu-inset-shadow: inset 5px 5px 10px #07080C, inset -4px -4px 9px #171C28;
+  --neu-inset-bg: #F1F5F9;
+  --neu-inset-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04);
 
-  --neu-border: rgba(255, 255, 255, 0.05);
+  --neu-border: #E2E8F0;
 }
 
-/* ── Light Theme ("Warm Alabaster Soft Clay") ──────────────── */
-[data-theme="light"] {
-  --bg-0: #E6E2DD;
-  --bg-1: #ECE8E3;
-  --surface: #F2EFE9;
-  --raised: #FAF8F5;
-  --recessed: #DEDAD4;
-  --text-1: #14161B;
-  --text-2: #4B5160;
-  --text-3: #7C8391;
+/* ── Dark Theme (Default — Deep Obsidian Precision) ────────── */
+:root,
+[data-theme="dark"] {
+  --bg-0: #090B10;
+  --bg-1: #0E1117;
+  --surface: #131722;
+  --raised: #191F2E;
+  --recessed: #0B0E14;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --text-1: #F8FAFC;
+  --text-2: #94A3B8;
+  --text-3: #64748B;
 
-  --neu-raised-bg: linear-gradient(145deg, #FAF7F2, #E5E1DC);
-  --neu-raised-shadow: 8px 8px 16px #CBC7C1, -8px -8px 16px #FFFFFF, inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  --neu-raised-sm-shadow: 4px 4px 10px #CBC7C1, -4px -4px 10px #FFFFFF, inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  --ember: #F97316;
+  --ember-hot: #EA580C;
+  --ember-glow: #FB923C;
+  --decision: #818CF8;
+  --action: #34D399;
+  --conflict: #FB7185;
+  --warning: #FBBF24;
+  --success: #4ADE80;
+  --info: #38BDF8;
 
-  --neu-inset-bg: #DEDAD4;
-  --neu-inset-shadow: inset 5px 5px 10px #C8C4BE, inset -5px -5px 10px #F8F4EE;
+  --neu-raised-bg: linear-gradient(180deg, #161B26 0%, #121620 100%);
+  --neu-raised-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --neu-raised-sm-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.06);
 
-  --neu-border: rgba(0, 0, 0, 0.06);
+  --neu-inset-bg: #0B0E14;
+  --neu-inset-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
+
+  --neu-border: rgba(255, 255, 255, 0.08);
 }
 
 /* ── Base Reset & Global Styles ────────────────────────────── */
@@ -102,7 +118,7 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── Neumorphic Surface Classes ────────────────────────────── */
+/* ── Precision Tactile Surface Classes ─────────────────────── */
 
 .neu-raised {
   background: var(--neu-raised-bg);
@@ -114,6 +130,7 @@ html, body {
 .neu-inset {
   background: var(--neu-inset-bg);
   box-shadow: var(--neu-inset-shadow);
+  border: 1px solid var(--neu-border);
   border-radius: 12px;
 }
 
@@ -123,7 +140,7 @@ html, body {
   border: 1px solid var(--neu-border);
   border-radius: 12px;
   cursor: pointer;
-  transition: transform 80ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 80ms ease;
+  transition: transform 80ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 80ms ease, background 80ms ease;
   user-select: none;
 }
 
@@ -135,24 +152,142 @@ html, body {
   transform: translateY(1px);
 }
 
+/* ── High-Contrast Buttons ─────────────────────────────────── */
+
+.btn-primary {
+  background: #EA580C !important;
+  color: #FFFFFF !important;
+  border: 1px solid #C2410C !important;
+  font-weight: 700 !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(234, 88, 12, 0.25) !important;
+  transition: background 120ms ease, transform 80ms ease !important;
+}
+
+.btn-primary:hover {
+  background: #D9460F !important;
+}
+
+.btn-primary:active {
+  transform: translateY(1px) !important;
+}
+
+.btn-secondary {
+  border-radius: 12px;
+  font-weight: 600;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+
+[data-theme="light"] .btn-secondary {
+  background: #FFFFFF !important;
+  color: #0F172A !important;
+  border: 1px solid #CBD5E1 !important;
+}
+
+[data-theme="light"] .btn-secondary:hover {
+  background: #F1F5F9 !important;
+  border-color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .btn-secondary,
+:root .btn-secondary {
+  background: #1E2536 !important;
+  color: #F8FAFC !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+[data-theme="dark"] .btn-secondary:hover,
+:root .btn-secondary:hover {
+  background: #262F45 !important;
+  border-color: rgba(255, 255, 255, 0.22) !important;
+}
+
+/* ── Semantic Status Pills (High Contrast) ──────────────────── */
+
+/* Conflict / Critical (Rose) */
+[data-theme="light"] .pill-conflict {
+  background: #FFE4E6 !important;
+  color: #9F1239 !important;
+  border: 1px solid #FECDD3 !important;
+}
+[data-theme="dark"] .pill-conflict,
+:root .pill-conflict {
+  background: rgba(244, 63, 94, 0.15) !important;
+  color: #FDA4AF !important;
+  border: 1px solid rgba(244, 63, 94, 0.3) !important;
+}
+
+/* Warning / Due Soon / Proposed (Amber) */
+[data-theme="light"] .pill-warning {
+  background: #FEF3C7 !important;
+  color: #92400E !important;
+  border: 1px solid #FDE68A !important;
+}
+[data-theme="dark"] .pill-warning,
+:root .pill-warning {
+  background: rgba(245, 158, 11, 0.15) !important;
+  color: #FCD34D !important;
+  border: 1px solid rgba(245, 158, 11, 0.3) !important;
+}
+
+/* Pending Approval / Review (Ember) */
+[data-theme="light"] .pill-pending {
+  background: #FFEDD5 !important;
+  color: #9A3412 !important;
+  border: 1px solid #FED7AA !important;
+}
+[data-theme="dark"] .pill-pending,
+:root .pill-pending {
+  background: rgba(249, 115, 22, 0.15) !important;
+  color: #FDBA74 !important;
+  border: 1px solid rgba(249, 115, 22, 0.3) !important;
+}
+
+/* Active / Completed / Synced (Emerald) */
+[data-theme="light"] .pill-success {
+  background: #D1FAE5 !important;
+  color: #065F46 !important;
+  border: 1px solid #A7F3D0 !important;
+}
+[data-theme="dark"] .pill-success,
+:root .pill-success {
+  background: rgba(16, 185, 129, 0.15) !important;
+  color: #6EE7B7 !important;
+  border: 1px solid rgba(16, 185, 129, 0.3) !important;
+}
+
+/* Decision / Info (Indigo) */
+[data-theme="light"] .pill-info {
+  background: #E0E7FF !important;
+  color: #3730A3 !important;
+  border: 1px solid #C7D2FE !important;
+}
+[data-theme="dark"] .pill-info,
+:root .pill-info {
+  background: rgba(99, 102, 241, 0.15) !important;
+  color: #A5B4FC !important;
+  border: 1px solid rgba(99, 102, 241, 0.3) !important;
+}
+
+/* ── Glow Highlights ───────────────────────────────────────── */
+
 .neu-ember-glow {
-  box-shadow: var(--neu-raised-shadow), 0 0 24px -4px rgba(255, 122, 26, 0.45);
-  border: 1px solid rgba(255, 122, 26, 0.4);
+  box-shadow: var(--neu-raised-shadow), 0 0 16px -2px rgba(234, 88, 12, 0.35);
+  border: 1px solid rgba(234, 88, 12, 0.4);
 }
 
 .neu-conflict-glow {
-  box-shadow: var(--neu-raised-shadow), 0 0 24px -4px rgba(255, 77, 109, 0.45);
-  border: 1px solid rgba(255, 77, 109, 0.4);
+  box-shadow: var(--neu-raised-shadow), 0 0 16px -2px rgba(225, 29, 72, 0.35);
+  border: 1px solid rgba(225, 29, 72, 0.4);
 }
 
 .neu-action-glow {
-  box-shadow: var(--neu-raised-shadow), 0 0 24px -4px rgba(52, 216, 171, 0.35);
-  border: 1px solid rgba(52, 216, 171, 0.35);
+  box-shadow: var(--neu-raised-shadow), 0 0 16px -2px rgba(5, 150, 105, 0.25);
+  border: 1px solid rgba(5, 150, 105, 0.35);
 }
 
 .neu-decision-glow {
-  box-shadow: var(--neu-raised-shadow), 0 0 24px -4px rgba(140, 156, 255, 0.35);
-  border: 1px solid rgba(140, 156, 255, 0.35);
+  box-shadow: var(--neu-raised-shadow), 0 0 16px -2px rgba(79, 70, 229, 0.25);
+  border: 1px solid rgba(79, 70, 229, 0.35);
 }
 
 /* ── Typography Classes ────────────────────────────────────── */
@@ -170,7 +305,7 @@ html, body {
   font-style: italic;
 }
 
-/* ── 3D Perspective & Spatial Depth ────────────────────────── */
+/* ── 3D Perspective & Depth ────────────────────────────────── */
 .perspective-1200 {
   perspective: 1200px;
 }
@@ -190,7 +325,7 @@ html, body {
   background: var(--recessed);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--raised);
+  background: var(--border-strong);
   border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {

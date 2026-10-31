@@ -98,6 +98,7 @@ export default function StudioPage() {
 
   // ── Pipeline & Extraction Rail State ───────────────────────
   const [isProcessing, setIsProcessing] = useState(false);
+  const [hasStartedProcessing, setHasStartedProcessing] = useState(false);
   const [stages, setStages] = useState<PipelineStageState[]>(INITIAL_STAGES);
   const [cleanedUtterances, setCleanedUtterances] = useState<any[]>([]);
   const [pipelineSummary, setPipelineSummary] = useState<string | null>(null);
@@ -227,6 +228,7 @@ export default function StudioPage() {
   // ── Process Meeting Intelligence (SSE Streaming) ───────────
   async function handleProcessIntelligence() {
     setIsProcessing(true);
+    setHasStartedProcessing(true);
     setStagedDecisions([]);
     setStagedActions([]);
     setStagedConflicts([]);
@@ -378,42 +380,77 @@ export default function StudioPage() {
   const currentSpeaker = people.find((p) => p.id === selectedSpeakerId);
 
   return (
-    <div className="p-6 max-w-[1440px] mx-auto space-y-6">
-      {/* ── Top Meeting Metadata Bar ─────────────────────────── */}
-      <div className="neu-raised p-4 flex flex-wrap items-center justify-between gap-4 border border-white/5">
-        <div className="flex flex-wrap items-center gap-3 flex-1 min-w-[280px]">
+    <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6">
+      {/* ── Top Clean Header Bar ──────────────────────────────── */}
+      <div className="neu-raised p-4 flex flex-wrap items-center justify-between gap-4 bg-surface border border-border-subtle">
+        {/* Meeting Title Input */}
+        <div className="flex-1 min-w-[240px]">
           <input
             type="text"
             value={meetingTitle}
             onChange={(e) => setMeetingTitle(e.target.value)}
-            className="neu-inset px-3 py-1.5 rounded-xl font-display font-bold text-sm text-text-1 outline-none border border-white/5 flex-1 min-w-[220px]"
+            className="w-full bg-recessed px-3.5 py-2 rounded-xl font-display font-bold text-sm text-text-1 outline-none border border-border-subtle focus:border-ember/40 transition-colors"
             placeholder="Meeting title..."
           />
-          <div className="flex items-center gap-2">
-            <Calendar size={13} className="text-text-3" />
-            <input
-              type="datetime-local"
-              value={meetingDate}
-              onChange={(e) => setMeetingDate(e.target.value)}
-              className="neu-inset px-2.5 py-1.5 rounded-xl font-mono text-xs text-text-2 outline-none border border-white/5"
-            />
-          </div>
-          <select
-            value={selectedProjectId}
-            onChange={(e) => setSelectedProjectId(e.target.value)}
-            className="neu-inset px-2.5 py-1.5 rounded-xl font-mono text-xs text-decision outline-none border border-white/5"
-          >
-            {projects.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.code} — {p.name}
-              </option>
-            ))}
-          </select>
         </div>
 
-        {/* Interactive Participant Roster Chips */}
-        <div className="flex items-center gap-1.5 flex-wrap">
-          <span className="text-[10px] font-mono text-text-3 uppercase mr-1">Roster:</span>
+        {/* Mode Switcher Tabs */}
+        <div className="bg-recessed p-1 rounded-xl flex items-center gap-1 border border-border-subtle">
+          <button
+            onClick={() => setCaptureMode("debrief")}
+            className={cn(
+              "py-1.5 px-3 rounded-lg text-xs font-mono font-semibold flex items-center gap-1.5 transition-all cursor-pointer",
+              captureMode === "debrief"
+                ? "bg-surface text-ember font-bold shadow-sm border border-border-subtle"
+                : "text-text-3 hover:text-text-1"
+            )}
+          >
+            <Mic size={13} />
+            <span>Voice Debrief</span>
+          </button>
+
+          <button
+            onClick={() => setCaptureMode("roundtable")}
+            className={cn(
+              "py-1.5 px-3 rounded-lg text-xs font-mono font-semibold flex items-center gap-1.5 transition-all cursor-pointer",
+              captureMode === "roundtable"
+                ? "bg-surface text-action font-bold shadow-sm border border-border-subtle"
+                : "text-text-3 hover:text-text-1"
+            )}
+          >
+            <Users size={13} />
+            <span>Round-Table</span>
+          </button>
+
+          <button
+            onClick={() => setCaptureMode("import")}
+            className={cn(
+              "py-1.5 px-3 rounded-lg text-xs font-mono font-semibold flex items-center gap-1.5 transition-all cursor-pointer",
+              captureMode === "import"
+                ? "bg-surface text-decision font-bold shadow-sm border border-border-subtle"
+                : "text-text-3 hover:text-text-1"
+            )}
+          >
+            <Upload size={13} />
+            <span>Import Transcript</span>
+          </button>
+        </div>
+
+        {/* Load Demo Recap Button */}
+        <button
+          onClick={handleLoadDemoRecap}
+          disabled={isTypewriting}
+          className="btn-secondary px-3.5 py-2 rounded-xl text-xs font-mono font-semibold flex items-center gap-1.5 cursor-pointer"
+        >
+          <Sparkles size={13} className={isTypewriting ? "animate-spin text-ember" : "text-ember"} />
+          <span>{isTypewriting ? "Streaming..." : "Load Demo Recap"}</span>
+        </button>
+      </div>
+
+      {/* Roster Chips ONLY shown in Round-Table Mode */}
+      {captureMode === "roundtable" && (
+        <div className="neu-raised p-3 rounded-xl flex items-center gap-2 flex-wrap border border-border-subtle bg-surface">
+          <span className="text-[11px] font-mono text-text-3 font-semibold uppercase mr-1">Active Roster:</span>
           {people.map((p) => {
             const isSelected = activeParticipants.includes(p.id);
             return (
@@ -426,9 +463,9 @@ export default function StudioPage() {
                   )
                 }
                 className={cn(
-                  "px-2 py-1 rounded-lg text-[10px] font-mono flex items-center gap-1.5 transition-all border",
+                  "px-2.5 py-1 rounded-lg text-xs font-mono flex items-center gap-1.5 transition-all border cursor-pointer",
                   isSelected
-                    ? "bg-white/[0.05] text-text-1 border-white/10"
+                    ? "bg-recessed text-text-1 border-border-strong font-semibold"
                     : "opacity-40 text-text-3 border-transparent hover:opacity-75"
                 )}
                 style={{
@@ -444,64 +481,21 @@ export default function StudioPage() {
             );
           })}
         </div>
-      </div>
+      )}
 
-      {/* ── Segmented Mode Switcher ──────────────────────────── */}
-      <div className="flex justify-center">
-        <div className="neu-inset p-1.5 rounded-2xl flex items-center gap-1.5 border border-white/5 max-w-md w-full">
-          <button
-            onClick={() => setCaptureMode("debrief")}
-            className={cn(
-              "flex-1 py-2 px-3 rounded-xl text-xs font-mono font-semibold flex items-center justify-center gap-2 transition-all",
-              captureMode === "debrief"
-                ? "neu-button neu-inset text-ember border-ember/30 shadow-[0_0_16px_rgba(255,122,26,0.3)]"
-                : "text-text-3 hover:text-text-1"
-            )}
-          >
-            <Mic size={14} />
-            <span>Voice Debrief</span>
-          </button>
-
-          <button
-            onClick={() => setCaptureMode("roundtable")}
-            className={cn(
-              "flex-1 py-2 px-3 rounded-xl text-xs font-mono font-semibold flex items-center justify-center gap-2 transition-all",
-              captureMode === "roundtable"
-                ? "neu-button neu-inset text-action border-action/30 shadow-[0_0_16px_rgba(52,216,171,0.3)]"
-                : "text-text-3 hover:text-text-1"
-            )}
-          >
-            <Users size={14} />
-            <span>Round-Table</span>
-          </button>
-
-          <button
-            onClick={() => setCaptureMode("import")}
-            className={cn(
-              "flex-1 py-2 px-3 rounded-xl text-xs font-mono font-semibold flex items-center justify-center gap-2 transition-all",
-              captureMode === "import"
-                ? "neu-button neu-inset text-decision border-decision/30 shadow-[0_0_16px_rgba(140,156,255,0.3)]"
-                : "text-text-3 hover:text-text-1"
-            )}
-          >
-            <Upload size={14} />
-            <span>Import Transcript</span>
-          </button>
-        </div>
-      </div>
-
-      {/* ── Main Studio Grid (Center Stage + Right Extraction Rail) ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Center Neumorphic Capture Stage */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Interactive VoiceOrb3D Pedestal Hero */}
-          <div className="neu-raised p-6 flex flex-col items-center justify-center relative overflow-hidden">
-            {/* Circular recessed pedestal with concentric soundwave rings */}
+      {/* ── Main Studio Stage: Single-Column or Multi-Column with Stepper ── */}
+      <div className={cn(
+        hasStartedProcessing ? "grid grid-cols-1 lg:grid-cols-3 gap-6" : "max-w-3xl mx-auto space-y-6"
+      )}>
+        {/* Center Capture Stage */}
+        <div className={cn(hasStartedProcessing && "lg:col-span-2", "space-y-6")}>
+          {/* Free-Floating 3D Voice Orb (No Recessed Dark Box) */}
+          <div className="flex flex-col items-center justify-center my-2 relative">
             <div className="relative w-44 h-44 flex items-center justify-center">
-              {/* Concentric soundwave ripples */}
-              <div className="absolute inset-0 rounded-full neu-inset border border-white/5 flex items-center justify-center">
-                <div className="w-36 h-36 rounded-full border border-white/5 flex items-center justify-center">
-                  <div className="w-28 h-28 rounded-full border border-ember/15" />
+              {/* Soft concentric soundwave rings */}
+              <div className="absolute inset-0 rounded-full border border-border-subtle/60 flex items-center justify-center">
+                <div className="w-36 h-36 rounded-full border border-border-subtle/40 flex items-center justify-center">
+                  <div className="w-28 h-28 rounded-full border border-ember/20" />
                 </div>
               </div>
 
@@ -513,9 +507,9 @@ export default function StudioPage() {
               />
             </div>
 
-            {/* Live Status Pill below Orb */}
-            <div className="mt-3 flex flex-col items-center gap-1">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full neu-inset text-[11px] font-mono text-text-3 border border-white/5">
+            {/* Clean Status Text below Orb */}
+            <div className="mt-2">
+              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-recessed text-xs font-mono text-text-3 border border-border-subtle">
                 <span
                   className={cn(
                     "w-2 h-2 rounded-full",
@@ -531,18 +525,14 @@ export default function StudioPage() {
                     ? "Dictation active (Wispr Flow)"
                     : orbState === "processing"
                     ? "Running AI speech normalization..."
-                    : "Listening for Wispr Flow dictation..."}
+                    : "Ready for Wispr Flow dictation"}
                 </span>
-              </div>
-              <div className="text-[10px] font-mono text-text-3">
-                Live Telemetry: <span className="text-ember font-bold">{charVelocity} CPS</span> · ~
-                {Math.round(charVelocity * 12)} WPM
-              </div>
+              </span>
             </div>
           </div>
 
           {/* Mode Capture Surface */}
-          <div className="neu-raised p-6 relative">
+          <div className="neu-raised p-6 relative bg-surface border border-border-subtle">
             {/* Mode A: Voice Debrief */}
             {captureMode === "debrief" && (
               <div className="space-y-4">
@@ -777,21 +767,17 @@ export default function StudioPage() {
             )}
 
             {/* Prominent Tactile CTA: Process Meeting Intelligence */}
-            <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between gap-4">
+            <div className="mt-6 pt-4 border-t border-border-subtle flex items-center justify-between gap-4">
               <span className="text-xs font-mono text-text-3">
                 Ready to extract decisions, lineage, and conflicts
               </span>
               <button
                 onClick={handleProcessIntelligence}
                 disabled={isProcessing || !currentText.trim()}
-                className={cn(
-                  "neu-button neu-ember-glow px-6 py-3 rounded-xl text-xs font-mono font-bold text-ember flex items-center gap-2 transition-all",
-                  isProcessing && "animate-pulse"
-                )}
+                className="btn-primary px-6 py-3 rounded-xl text-xs font-mono font-bold flex items-center gap-2 cursor-pointer shadow-md disabled:opacity-40"
               >
-                <Zap size={15} className={isProcessing ? "animate-spin" : ""} />
-                <span>{isProcessing ? "Processing Intelligence..." : "Process Meeting Intelligence"}</span>
-                <ChevronRight size={14} />
+                <Zap size={15} className={isProcessing ? "animate-spin text-white" : "text-white"} />
+                <span>{isProcessing ? "Processing Intelligence..." : "Process Meeting Intelligence →"}</span>
               </button>
             </div>
           </div>
@@ -916,7 +902,8 @@ export default function StudioPage() {
         </div>
 
         {/* ── Right-Hand Live Extraction Rail (6-Stage Stepper) ── */}
-        <div className="space-y-6">
+        {hasStartedProcessing && (
+          <div className="space-y-6">
           <div className="neu-raised p-5 space-y-5">
             <div className="flex items-center justify-between pb-3 border-b border-white/5">
               <div className="flex items-center gap-2">
@@ -1186,6 +1173,7 @@ export default function StudioPage() {
             )}
           </div>
         </div>
+        )}
       </div>
 
       {/* Speaker Mapping Modal for Mode C */}
