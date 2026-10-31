@@ -1,0 +1,207 @@
+@import "tailwindcss";
+
+/* ============================================================
+   CLOSELOOP — TACTILE OBSIDIAN & EMBER DESIGN SYSTEM
+   Master Design Tokens & Neumorphic Physics
+   ============================================================ */
+
+@theme {
+  --color-bg-0: var(--bg-0);
+  --color-bg-1: var(--bg-1);
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-recessed: var(--recessed);
+  --color-text-1: var(--text-1);
+  --color-text-2: var(--text-2);
+  --color-text-3: var(--text-3);
+
+  --color-ember: #FF7A1A;
+  --color-ember-hot: #FF5500;
+  --color-ember-glow: #FFB347;
+
+  --color-decision: #8C9CFF;
+  --color-action: #34D8AB;
+  --color-conflict: #FF4D6D;
+  --color-warning: #FFC247;
+  --color-success: #4ADE80;
+  --color-info: #5CC8FF;
+
+  --font-family-display: var(--font-inter-tight), "Inter Tight", sans-serif;
+  --font-family-ui: var(--font-geist-sans), "Geist", sans-serif;
+  --font-family-mono: var(--font-geist-mono), "Geist Mono", monospace;
+  --font-family-accent: var(--font-instrument-serif), "Instrument Serif", serif;
+}
+
+/* ── Dark Theme (Default — "Obsidian Soft Clay") ────────────── */
+:root,
+[data-theme="dark"] {
+  --bg-0: #0B0E14;
+  --bg-1: #12161F;
+  --surface: #161B26;
+  --raised: #1C2230;
+  --recessed: #0D1017;
+  --text-1: #F4F6F9;
+  --text-2: #A8B0C0;
+  --text-3: #6E7787;
+
+  --ember: #FF7A1A;
+  --ember-hot: #FF5500;
+  --ember-glow: #FFB347;
+  --decision: #8C9CFF;
+  --action: #34D8AB;
+  --conflict: #FF4D6D;
+  --warning: #FFC247;
+  --success: #4ADE80;
+  --info: #5CC8FF;
+
+  --neu-raised-bg: linear-gradient(145deg, #181E2A, #131720);
+  --neu-raised-shadow: 8px 8px 18px #07090D, -6px -6px 14px #212838, inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  --neu-raised-sm-shadow: 4px 4px 10px #07090D, -3px -3px 8px #212838, inset 0 1px 0 rgba(255, 255, 255, 0.07);
+
+  --neu-inset-bg: #0D1017;
+  --neu-inset-shadow: inset 5px 5px 10px #07080C, inset -4px -4px 9px #171C28;
+
+  --neu-border: rgba(255, 255, 255, 0.05);
+}
+
+/* ── Light Theme ("Warm Alabaster Soft Clay") ──────────────── */
+[data-theme="light"] {
+  --bg-0: #E6E2DD;
+  --bg-1: #ECE8E3;
+  --surface: #F2EFE9;
+  --raised: #FAF8F5;
+  --recessed: #DEDAD4;
+  --text-1: #14161B;
+  --text-2: #4B5160;
+  --text-3: #7C8391;
+
+  --neu-raised-bg: linear-gradient(145deg, #FAF7F2, #E5E1DC);
+  --neu-raised-shadow: 8px 8px 16px #CBC7C1, -8px -8px 16px #FFFFFF, inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  --neu-raised-sm-shadow: 4px 4px 10px #CBC7C1, -4px -4px 10px #FFFFFF, inset 0 1px 0 rgba(255, 255, 255, 0.8);
+
+  --neu-inset-bg: #DEDAD4;
+  --neu-inset-shadow: inset 5px 5px 10px #C8C4BE, inset -5px -5px 10px #F8F4EE;
+
+  --neu-border: rgba(0, 0, 0, 0.06);
+}
+
+/* ── Base Reset & Global Styles ────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  background-color: var(--bg-0);
+  color: var(--text-1);
+  min-height: 100dvh;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Neumorphic Surface Classes ────────────────────────────── */
+
+.neu-raised {
+  background: var(--neu-raised-bg);
+  box-shadow: var(--neu-raised-shadow);
+  border: 1px solid var(--neu-border);
+  border-radius: 16px;
+}
+
+.neu-inset {
+  background: var(--neu-inset-bg);
+  box-shadow: var(--neu-inset-shadow);
+  border-radius: 12px;
+}
+
+.neu-button {
+  background: var(--neu-raised-bg);
+  box-shadow: var(--neu-raised-sm-shadow);
+  border: 1px solid var(--neu-border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 80ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 80ms ease;
+  user-select: none;
+}
+
+.neu-button:active,
+.neu-button[data-state="on"],
+.neu-button[data-active="true"] {
+  background: var(--neu-inset-bg);
+  box-shadow: var(--neu-inset-shadow);
+  transform: translateY(1px);
+}
+
+.neu-ember-glow {
+  box-shadow: var(--neu-raised-shadow), 0 0 24px -4px rgba(255, 122, 26, 0.45);
+  border: 1px solid rgba(255, 122, 26, 0.4);
+}
+
+.neu-conflict-glow {
+  box-shadow: var(--neu-raised-shadow), 0 0 24px -4px rgba(255, 77, 109, 0.45);
+  border: 1px solid rgba(255, 77, 109, 0.4);
+}
+
+.neu-action-glow {
+  box-shadow: var(--neu-raised-shadow), 0 0 24px -4px rgba(52, 216, 171, 0.35);
+  border: 1px solid rgba(52, 216, 171, 0.35);
+}
+
+.neu-decision-glow {
+  box-shadow: var(--neu-raised-shadow), 0 0 24px -4px rgba(140, 156, 255, 0.35);
+  border: 1px solid rgba(140, 156, 255, 0.35);
+}
+
+/* ── Typography Classes ────────────────────────────────────── */
+.font-display {
+  font-family: var(--font-inter-tight), "Inter Tight", sans-serif;
+}
+.font-ui {
+  font-family: var(--font-geist-sans), "Geist", sans-serif;
+}
+.font-mono {
+  font-family: var(--font-geist-mono), "Geist Mono", monospace;
+}
+.font-accent {
+  font-family: var(--font-instrument-serif), "Instrument Serif", Georgia, serif;
+  font-style: italic;
+}
+
+/* ── 3D Perspective & Spatial Depth ────────────────────────── */
+.perspective-1200 {
+  perspective: 1200px;
+}
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+[data-depth="floating"] {
+  transform: translateZ(20px);
+}
+
+/* ── Custom Scrollbar ──────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--recessed);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--raised);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-3);
+}
+
+/* ── Accessibility & Reduced Motion ────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
