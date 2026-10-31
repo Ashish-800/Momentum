@@ -73,23 +73,43 @@ export function AppShellClient({
     return () => window.removeEventListener("closeloop:clock-advanced", handleClockAdvanced);
   }, []);
 
+  // Apply theme to DOM and persist
+  function applyTheme(next: "dark" | "light") {
+    setTheme(next);
+    if (typeof document !== "undefined") {
+      document.documentElement.setAttribute("data-theme", next);
+      if (next === "light") {
+        document.documentElement.classList.remove("dark");
+        document.documentElement.classList.add("light");
+      } else {
+        document.documentElement.classList.remove("light");
+        document.documentElement.classList.add("dark");
+      }
+      try {
+        localStorage.setItem("closeloop-theme", next);
+        document.cookie = `closeloop-theme=${next}; path=/; max-age=31536000`;
+      } catch (e) {}
+    }
+  }
+
   // Initialize theme from document or localStorage
   useEffect(() => {
-    const saved = localStorage.getItem("closeloop-theme") as "dark" | "light" | null;
-    if (saved) {
-      setTheme(saved);
-      document.documentElement.setAttribute("data-theme", saved);
-    } else {
-      document.documentElement.setAttribute("data-theme", "dark");
-    }
+    try {
+      let saved = localStorage.getItem("closeloop-theme") as "dark" | "light" | null;
+      if (!saved) {
+        const m = document.cookie.match(/closeloop-theme=([^;]+)/);
+        if (m && (m[1] === "dark" || m[1] === "light")) {
+          saved = m[1] as "dark" | "light";
+        }
+      }
+      const initial = saved === "light" ? "light" : "dark";
+      applyTheme(initial);
+    } catch (e) {}
   }, []);
 
   function toggleTheme() {
     const next = theme === "dark" ? "light" : "dark";
-    setTheme(next);
-    document.documentElement.setAttribute("data-theme", next);
-    localStorage.setItem("closeloop-theme", next);
-    document.cookie = `theme=${next}; path=/; max-age=31536000`;
+    applyTheme(next);
   }
 
   // Global shortcut for Cmd+K
@@ -174,8 +194,22 @@ export function AppShellClient({
           </nav>
         </div>
 
-        {/* Bottom Rail: ONLY Notifications Bell & Settings Gear */}
+        {/* Bottom Rail: Theme Switcher, Notifications Bell & Settings Gear */}
         <div className="flex flex-col items-center gap-2.5">
+          {/* Theme Toggle Button (Sun / Moon) */}
+          <button
+            onClick={toggleTheme}
+            className="w-10 h-10 flex items-center justify-center rounded-xl text-text-3 hover:text-text-1 hover:bg-recessed transition-colors cursor-pointer"
+            title={`Switch to ${theme === "dark" ? "Light" : "Dark"} mode`}
+            aria-label="Toggle Theme"
+          >
+            {theme === "dark" ? (
+              <Sun size={18} className="text-amber-400" />
+            ) : (
+              <Moon size={18} className="text-indigo-600" />
+            )}
+          </button>
+
           <button
             onClick={() => setNotificationsOpen(true)}
             className="relative w-10 h-10 flex items-center justify-center rounded-xl text-text-3 hover:text-text-1 hover:bg-recessed transition-colors cursor-pointer"
@@ -235,7 +269,7 @@ export function AppShellClient({
             </button>
           </div>
 
-          {/* Right Group: EXACTLY 3 Items */}
+          {/* Right Group: Simulated Clock & AI Assistant (Theme toggle moved to Sidebar) */}
           <div className="flex items-center gap-3">
             {/* 1. Simulated Clock / Time Machine Pill */}
             <TimeMachinePill
@@ -246,26 +280,7 @@ export function AppShellClient({
               }}
             />
 
-            {/* 2. Physical Sliding Theme Toggle Pill (☀️ Light / 🌙 Dark) */}
-            <button
-              onClick={toggleTheme}
-              className="btn-secondary px-3 py-1.5 rounded-xl flex items-center gap-2 text-xs font-mono font-semibold cursor-pointer shadow-sm"
-              title={`Switch to ${theme === "dark" ? "Light" : "Dark"} theme`}
-            >
-              {theme === "dark" ? (
-                <>
-                  <Sun size={14} className="text-amber-400" />
-                  <span>Light</span>
-                </>
-              ) : (
-                <>
-                  <Moon size={14} className="text-indigo-600" />
-                  <span>Dark</span>
-                </>
-              )}
-            </button>
-
-            {/* 3. AI Assistant Toggle Button */}
+            {/* 2. AI Assistant Toggle Button */}
             <button
               onClick={() => setAssistantOpen((prev) => !prev)}
               className={cn(

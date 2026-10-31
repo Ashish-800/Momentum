@@ -17,6 +17,7 @@ export default function RootLayout({
     <html
       lang="en"
       data-theme="dark"
+      className="dark"
       suppressHydrationWarning
     >
       <head>
@@ -25,6 +26,30 @@ export default function RootLayout({
         <link
           href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&family=Instrument+Serif:ital@0;1&family=Inter+Tight:ital,wght@0,300..900;1,300..900&display=swap"
           rel="stylesheet"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var saved = localStorage.getItem('closeloop-theme');
+                  if (!saved) {
+                    var m = document.cookie.match(/closeloop-theme=([^;]+)/);
+                    if (m) saved = m[1];
+                  }
+                  var t = (saved === 'light') ? 'light' : 'dark';
+                  document.documentElement.setAttribute('data-theme', t);
+                  if (t === 'light') {
+                    document.documentElement.classList.remove('dark');
+                    document.documentElement.classList.add('light');
+                  } else {
+                    document.documentElement.classList.remove('light');
+                    document.documentElement.classList.add('dark');
+                  }
+                } catch(e) {}
+              })();
+            `,
+          }}
         />
       </head>
       <body className="font-ui antialiased bg-bg-0 text-text-1 min-h-dvh relative selection:bg-ember/25 selection:text-text-1">

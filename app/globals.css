@@ -35,7 +35,8 @@
 }
 
 /* ── Light Theme (Crisp Daylight — Clean Cool Alabaster) ──── */
-[data-theme="light"] {
+[data-theme="light"],
+.light {
   --bg-0: #F8FAFC;
   --bg-1: #FFFFFF;
   --surface: #FFFFFF;
@@ -69,7 +70,8 @@
 
 /* ── Dark Theme (Default — Deep Obsidian Precision) ────────── */
 :root,
-[data-theme="dark"] {
+[data-theme="dark"],
+.dark {
   --bg-0: #090B10;
   --bg-1: #0E1117;
   --surface: #131722;
@@ -177,18 +179,21 @@ html, body {
   transition: background 120ms ease, border-color 120ms ease;
 }
 
-[data-theme="light"] .btn-secondary {
+[data-theme="light"] .btn-secondary,
+.light .btn-secondary {
   background: #FFFFFF !important;
   color: #0F172A !important;
   border: 1px solid #CBD5E1 !important;
 }
 
-[data-theme="light"] .btn-secondary:hover {
+[data-theme="light"] .btn-secondary:hover,
+.light .btn-secondary:hover {
   background: #F1F5F9 !important;
   border-color: #94A3B8 !important;
 }
 
 [data-theme="dark"] .btn-secondary,
+.dark .btn-secondary,
 :root .btn-secondary {
   background: #1E2536 !important;
   color: #F8FAFC !important;
@@ -196,6 +201,7 @@ html, body {
 }
 
 [data-theme="dark"] .btn-secondary:hover,
+.dark .btn-secondary:hover,
 :root .btn-secondary:hover {
   background: #262F45 !important;
   border-color: rgba(255, 255, 255, 0.22) !important;
