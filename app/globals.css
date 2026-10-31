@@ -34,42 +34,41 @@
   --font-family-accent: var(--font-instrument-serif), "Instrument Serif", serif;
 }
 
-/* ── Light Theme (Crisp Daylight — Clean Cool Alabaster) ──── */
-[data-theme="light"],
-.light {
-  --bg-0: #F8FAFC;
-  --bg-1: #FFFFFF;
-  --surface: #FFFFFF;
-  --raised: #FFFFFF;
-  --recessed: #F1F5F9;
-  --border-subtle: #E2E8F0;
-  --border-strong: #CBD5E1;
-  --text-1: #0F172A;
-  --text-2: #334155;
-  --text-3: #475569;
+/* ── Base Default Theme (:root — Dark Mode Fallback) ─────── */
+:root {
+  --bg-0: #090B10;
+  --bg-1: #0E1117;
+  --surface: #131722;
+  --raised: #191F2E;
+  --recessed: #0B0E14;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --text-1: #F8FAFC;
+  --text-2: #94A3B8;
+  --text-3: #64748B;
 
-  --ember: #EA580C;
-  --ember-hot: #C2410C;
-  --ember-glow: #F97316;
-  --decision: #4F46E5;
-  --action: #059669;
-  --conflict: #E11D48;
-  --warning: #D97706;
-  --success: #16A34A;
-  --info: #0284C7;
+  --ember: #F97316;
+  --ember-hot: #EA580C;
+  --ember-glow: #FB923C;
+  --decision: #818CF8;
+  --action: #34D399;
+  --conflict: #FB7185;
+  --warning: #FBBF24;
+  --success: #4ADE80;
+  --info: #38BDF8;
 
-  --neu-raised-bg: #FFFFFF;
-  --neu-raised-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.03);
-  --neu-raised-sm-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --neu-raised-bg: #131722;
+  --neu-raised-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --neu-raised-sm-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.06);
 
-  --neu-inset-bg: #F1F5F9;
-  --neu-inset-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04);
+  --neu-inset-bg: #0B0E14;
+  --neu-inset-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
 
-  --neu-border: #E2E8F0;
+  --neu-border: rgba(255, 255, 255, 0.08);
+  color-scheme: dark;
 }
 
-/* ── Dark Theme (Default — Deep Obsidian Precision) ────────── */
-:root,
+/* ── Explicit Dark Theme ───────────────────────────────────── */
 [data-theme="dark"],
 .dark {
   --bg-0: #090B10;
@@ -93,14 +92,55 @@
   --success: #4ADE80;
   --info: #38BDF8;
 
-  --neu-raised-bg: linear-gradient(180deg, #161B26 0%, #121620 100%);
-  --neu-raised-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  --neu-raised-sm-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --neu-raised-bg: #131722;
+  --neu-raised-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --neu-raised-sm-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.06);
 
   --neu-inset-bg: #0B0E14;
   --neu-inset-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
 
   --neu-border: rgba(255, 255, 255, 0.08);
+  color-scheme: dark;
+}
+
+/* ── Light Theme (Crisp Daylight — Clean Cool Alabaster) ──── */
+/* Strictly declared AFTER dark theme with !important & high specificity */
+:root[data-theme="light"],
+html[data-theme="light"],
+html.light,
+body[data-theme="light"],
+[data-theme="light"],
+.light {
+  --bg-0: #F8FAFC !important;
+  --bg-1: #FFFFFF !important;
+  --surface: #FFFFFF !important;
+  --raised: #FFFFFF !important;
+  --recessed: #F1F5F9 !important;
+  --border-subtle: #E2E8F0 !important;
+  --border-strong: #CBD5E1 !important;
+  --text-1: #0F172A !important;
+  --text-2: #334155 !important;
+  --text-3: #475569 !important;
+
+  --ember: #EA580C !important;
+  --ember-hot: #C2410C !important;
+  --ember-glow: #F97316 !important;
+  --decision: #4F46E5 !important;
+  --action: #059669 !important;
+  --conflict: #E11D48 !important;
+  --warning: #D97706 !important;
+  --success: #16A34A !important;
+  --info: #0284C7 !important;
+
+  --neu-raised-bg: #FFFFFF !important;
+  --neu-raised-shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 4px 12px rgba(15, 23, 42, 0.04) !important;
+  --neu-raised-sm-shadow: 0 1px 2px rgba(15, 23, 42, 0.06) !important;
+
+  --neu-inset-bg: #F1F5F9 !important;
+  --neu-inset-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.06) !important;
+
+  --neu-border: #E2E8F0 !important;
+  color-scheme: light;
 }
 
 /* ── Base Reset & Global Styles ────────────────────────────── */
@@ -179,6 +219,19 @@ html, body {
   transition: background 120ms ease, border-color 120ms ease;
 }
 
+[data-theme="dark"] .btn-secondary,
+.dark .btn-secondary {
+  background: #1E2536 !important;
+  color: #F8FAFC !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+[data-theme="dark"] .btn-secondary:hover,
+.dark .btn-secondary:hover {
+  background: #262F45 !important;
+  border-color: rgba(255, 255, 255, 0.22) !important;
+}
+
 [data-theme="light"] .btn-secondary,
 .light .btn-secondary {
   background: #FFFFFF !important;
@@ -192,86 +245,93 @@ html, body {
   border-color: #94A3B8 !important;
 }
 
-[data-theme="dark"] .btn-secondary,
-.dark .btn-secondary,
-:root .btn-secondary {
-  background: #1E2536 !important;
-  color: #F8FAFC !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-}
-
-[data-theme="dark"] .btn-secondary:hover,
-.dark .btn-secondary:hover,
-:root .btn-secondary:hover {
-  background: #262F45 !important;
-  border-color: rgba(255, 255, 255, 0.22) !important;
-}
-
 /* ── Semantic Status Pills (High Contrast) ──────────────────── */
 
 /* Conflict / Critical (Rose) */
-[data-theme="light"] .pill-conflict {
-  background: #FFE4E6 !important;
-  color: #9F1239 !important;
-  border: 1px solid #FECDD3 !important;
-}
 [data-theme="dark"] .pill-conflict,
-:root .pill-conflict {
+.dark .pill-conflict {
   background: rgba(244, 63, 94, 0.15) !important;
   color: #FDA4AF !important;
   border: 1px solid rgba(244, 63, 94, 0.3) !important;
 }
+[data-theme="light"] .pill-conflict,
+.light .pill-conflict {
+  background: #FFE4E6 !important;
+  color: #9F1239 !important;
+  border: 1px solid #FECDD3 !important;
+}
 
 /* Warning / Due Soon / Proposed (Amber) */
-[data-theme="light"] .pill-warning {
-  background: #FEF3C7 !important;
-  color: #92400E !important;
-  border: 1px solid #FDE68A !important;
-}
 [data-theme="dark"] .pill-warning,
-:root .pill-warning {
+.dark .pill-warning {
   background: rgba(245, 158, 11, 0.15) !important;
   color: #FCD34D !important;
   border: 1px solid rgba(245, 158, 11, 0.3) !important;
 }
+[data-theme="light"] .pill-warning,
+.light .pill-warning {
+  background: #FEF3C7 !important;
+  color: #92400E !important;
+  border: 1px solid #FDE68A !important;
+}
 
 /* Pending Approval / Review (Ember) */
-[data-theme="light"] .pill-pending {
-  background: #FFEDD5 !important;
-  color: #9A3412 !important;
-  border: 1px solid #FED7AA !important;
-}
 [data-theme="dark"] .pill-pending,
-:root .pill-pending {
+.dark .pill-pending {
   background: rgba(249, 115, 22, 0.15) !important;
   color: #FDBA74 !important;
   border: 1px solid rgba(249, 115, 22, 0.3) !important;
 }
+[data-theme="light"] .pill-pending,
+.light .pill-pending {
+  background: #FFEDD5 !important;
+  color: #9A3412 !important;
+  border: 1px solid #FED7AA !important;
+}
 
 /* Active / Completed / Synced (Emerald) */
-[data-theme="light"] .pill-success {
-  background: #D1FAE5 !important;
-  color: #065F46 !important;
-  border: 1px solid #A7F3D0 !important;
-}
 [data-theme="dark"] .pill-success,
-:root .pill-success {
+.dark .pill-success {
   background: rgba(16, 185, 129, 0.15) !important;
   color: #6EE7B7 !important;
   border: 1px solid rgba(16, 185, 129, 0.3) !important;
 }
+[data-theme="light"] .pill-success,
+.light .pill-success {
+  background: #D1FAE5 !important;
+  color: #065F46 !important;
+  border: 1px solid #A7F3D0 !important;
+}
 
 /* Decision / Info (Indigo) */
-[data-theme="light"] .pill-info {
+[data-theme="dark"] .pill-info,
+.dark .pill-info {
+  background: rgba(99, 102, 241, 0.15) !important;
+  color: #A5B4FC !important;
+  border: 1px solid rgba(99, 102, 241, 0.3) !important;
+}
+[data-theme="light"] .pill-info,
+.light .pill-info {
   background: #E0E7FF !important;
   color: #3730A3 !important;
   border: 1px solid #C7D2FE !important;
 }
-[data-theme="dark"] .pill-info,
-:root .pill-info {
-  background: rgba(99, 102, 241, 0.15) !important;
-  color: #A5B4FC !important;
-  border: 1px solid rgba(99, 102, 241, 0.3) !important;
+
+/* ── Light Mode Color Adaptations for Tailwind utility fallbacks ── */
+[data-theme="light"] .border-white\/5,
+[data-theme="light"] .border-white\/10,
+.light .border-white\/5,
+.light .border-white\/10 {
+  border-color: #E2E8F0 !important;
+}
+
+[data-theme="light"] .bg-white\/5,
+[data-theme="light"] .bg-white\/10,
+[data-theme="light"] .bg-white\/\[0\.02\],
+.light .bg-white\/5,
+.light .bg-white\/10,
+.light .bg-white\/\[0\.02\] {
+  background-color: #F1F5F9 !important;
 }
 
 /* ── Glow Highlights ───────────────────────────────────────── */

@@ -63,8 +63,26 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
     const current = document.documentElement.getAttribute("data-theme") || "dark";
     const next = current === "dark" ? "light" : "dark";
     document.documentElement.setAttribute("data-theme", next);
-    localStorage.setItem("closeloop-theme", next);
-    document.cookie = `theme=${next}; path=/; max-age=31536000`;
+    document.body.setAttribute("data-theme", next);
+    if (next === "light") {
+      document.documentElement.classList.remove("dark");
+      document.documentElement.classList.add("light");
+      document.body.classList.remove("dark");
+      document.body.classList.add("light");
+    } else {
+      document.documentElement.classList.remove("light");
+      document.documentElement.classList.add("dark");
+      document.body.classList.remove("light");
+      document.body.classList.add("dark");
+    }
+    document.documentElement.style.colorScheme = next;
+    try {
+      localStorage.setItem("closeloop-theme", next);
+      document.cookie = `closeloop-theme=${next}; path=/; max-age=31536000`;
+    } catch (e) {}
+    window.dispatchEvent(
+      new CustomEvent("closeloop:theme-changed", { detail: { theme: next } })
+    );
     onClose();
   };
 

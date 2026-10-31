@@ -78,17 +78,29 @@ export function AppShellClient({
     setTheme(next);
     if (typeof document !== "undefined") {
       document.documentElement.setAttribute("data-theme", next);
+      document.body.setAttribute("data-theme", next);
+
       if (next === "light") {
         document.documentElement.classList.remove("dark");
         document.documentElement.classList.add("light");
+        document.body.classList.remove("dark");
+        document.body.classList.add("light");
       } else {
         document.documentElement.classList.remove("light");
         document.documentElement.classList.add("dark");
+        document.body.classList.remove("light");
+        document.body.classList.add("dark");
       }
+      document.documentElement.style.colorScheme = next;
+
       try {
         localStorage.setItem("closeloop-theme", next);
         document.cookie = `closeloop-theme=${next}; path=/; max-age=31536000`;
       } catch (e) {}
+
+      window.dispatchEvent(
+        new CustomEvent("closeloop:theme-changed", { detail: { theme: next } })
+      );
     }
   }
 
@@ -102,13 +114,29 @@ export function AppShellClient({
           saved = m[1] as "dark" | "light";
         }
       }
+      if (!saved) {
+        const currentAttr = document.documentElement.getAttribute("data-theme");
+        if (currentAttr === "light" || currentAttr === "dark") {
+          saved = currentAttr;
+        }
+      }
       const initial = saved === "light" ? "light" : "dark";
       applyTheme(initial);
     } catch (e) {}
+
+    const handleExternalThemeChange = (e: any) => {
+      if (e.detail?.theme && (e.detail.theme === "light" || e.detail.theme === "dark")) {
+        setTheme(e.detail.theme);
+      }
+    };
+
+    window.addEventListener("closeloop:theme-changed", handleExternalThemeChange);
+    return () => window.removeEventListener("closeloop:theme-changed", handleExternalThemeChange);
   }, []);
 
   function toggleTheme() {
-    const next = theme === "dark" ? "light" : "dark";
+    const currentOnDom = document.documentElement.getAttribute("data-theme") || theme;
+    const next = currentOnDom === "dark" ? "light" : "dark";
     applyTheme(next);
   }
 
@@ -198,7 +226,11 @@ export function AppShellClient({
         <div className="flex flex-col items-center gap-2.5">
           {/* Theme Toggle Button (Sun / Moon) */}
           <button
-            onClick={toggleTheme}
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              toggleTheme();
+            }}
             className="w-10 h-10 flex items-center justify-center rounded-xl text-text-3 hover:text-text-1 hover:bg-recessed transition-colors cursor-pointer"
             title={`Switch to ${theme === "dark" ? "Light" : "Dark"} mode`}
             aria-label="Toggle Theme"
@@ -325,6 +357,24 @@ export function AppShellClient({
               </Link>
             );
           })}
+          {/* Mobile Theme Toggle Button */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              toggleTheme();
+            }}
+            className="relative p-2.5 rounded-xl flex flex-col items-center text-text-3 hover:text-text-1 cursor-pointer"
+            title={`Switch to ${theme === "dark" ? "Light" : "Dark"} mode`}
+            aria-label="Toggle Theme"
+          >
+            {theme === "dark" ? (
+              <Sun size={18} className="text-amber-400" />
+            ) : (
+              <Moon size={18} className="text-indigo-600" />
+            )}
+            <span className="text-[9px] mt-0.5">{theme === "dark" ? "Light" : "Dark"}</span>
+          </button>
         </div>
       </div>
 
