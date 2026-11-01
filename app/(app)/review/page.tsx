@@ -293,7 +293,7 @@ export default function ReviewPage() {
 
         {openConflicts.length > 0 ? (
           <div className="space-y-6">
-            {openConflicts.map((c: any) => {
+            {openConflicts.slice(0, 1).map((c: any) => {
               const oldDec = (data?.meetings || []).flatMap((m: any) => data?.stagedDecisions || []).find((d: any) => d.id === c.oldDecisionId) ||
                 DEMO_SEED_DATA.decisions.find((d) => d.id === c.oldDecisionId);
               const newDec = (data?.stagedDecisions || []).find((d: any) => d.id === c.newDecisionId) ||
@@ -338,7 +338,7 @@ export default function ReviewPage() {
 
         {allStagedItems.length > 0 ? (
           <div className="space-y-4">
-            {allStagedItems.map((item: any, idx: number) => {
+            {allStagedItems.slice(0, 3).map((item: any, idx: number) => {
               const isLocked = isItemConflictLocked(item);
 
               return (

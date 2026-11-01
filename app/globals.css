@@ -36,16 +36,16 @@
 
 /* ── Base Default Theme (:root — Dark Mode Fallback) ─────── */
 :root {
-  --bg-0: #0B0E14;
-  --bg-1: #0E121A;
-  --surface: #131822;
-  --raised: #181E2B;
-  --recessed: #090C11;
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.16);
-  --text-1: #F8FAFC;
-  --text-2: #94A3B8;
-  --text-3: #64748B;
+  --bg-0: #0D1117;
+  --bg-1: #131822;
+  --surface: #181F2C;
+  --raised: #1F2838;
+  --recessed: #0A0D12;
+  --border-subtle: rgba(255, 255, 255, 0.10);
+  --border-strong: rgba(255, 255, 255, 0.20);
+  --text-1: #FFFFFF;
+  --text-2: #E2E8F0;
+  --text-3: #B4C0D3;
 
   --ember: #F97316;
   --ember-hot: #EA580C;
@@ -57,30 +57,30 @@
   --success: #4ADE80;
   --info: #38BDF8;
 
-  --neu-raised-bg: linear-gradient(145deg, #181E2B, #10141D);
-  --neu-raised-shadow: 9px 9px 20px #06080B, -6px -6px 16px #1E2638, inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  --neu-raised-sm-shadow: 5px 5px 12px #06080B, -4px -4px 10px #1E2638;
+  --neu-raised-bg: linear-gradient(145deg, #1C2332, #141A25);
+  --neu-raised-shadow: 8px 8px 18px #080B0F, -6px -6px 14px #222B3D, inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --neu-raised-sm-shadow: 4px 4px 10px #080B0F, -4px -4px 10px #222B3D;
 
-  --neu-inset-bg: #090C11;
-  --neu-inset-shadow: inset 5px 5px 12px #05070A, inset -4px -4px 10px #171D2A;
+  --neu-inset-bg: #0A0D12;
+  --neu-inset-shadow: inset 4px 4px 10px #05070A, inset -4px -4px 10px #18202D;
 
-  --neu-border: rgba(255, 255, 255, 0.06);
+  --neu-border: rgba(255, 255, 255, 0.07);
   color-scheme: dark;
 }
 
 /* ── Explicit Dark Theme ───────────────────────────────────── */
 [data-theme="dark"],
 .dark {
-  --bg-0: #0B0E14;
-  --bg-1: #0E121A;
-  --surface: #131822;
-  --raised: #181E2B;
-  --recessed: #090C11;
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.16);
-  --text-1: #F8FAFC;
-  --text-2: #94A3B8;
-  --text-3: #64748B;
+  --bg-0: #0D1117;
+  --bg-1: #131822;
+  --surface: #181F2C;
+  --raised: #1F2838;
+  --recessed: #0A0D12;
+  --border-subtle: rgba(255, 255, 255, 0.10);
+  --border-strong: rgba(255, 255, 255, 0.20);
+  --text-1: #FFFFFF;
+  --text-2: #E2E8F0;
+  --text-3: #B4C0D3;
 
   --ember: #F97316;
   --ember-hot: #EA580C;
@@ -92,18 +92,18 @@
   --success: #4ADE80;
   --info: #38BDF8;
 
-  --neu-raised-bg: linear-gradient(145deg, #181E2B, #10141D);
-  --neu-raised-shadow: 9px 9px 20px #06080B, -6px -6px 16px #1E2638, inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  --neu-raised-sm-shadow: 5px 5px 12px #06080B, -4px -4px 10px #1E2638;
+  --neu-raised-bg: linear-gradient(145deg, #1C2332, #141A25);
+  --neu-raised-shadow: 8px 8px 18px #080B0F, -6px -6px 14px #222B3D, inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --neu-raised-sm-shadow: 4px 4px 10px #080B0F, -4px -4px 10px #222B3D;
 
-  --neu-inset-bg: #090C11;
-  --neu-inset-shadow: inset 5px 5px 12px #05070A, inset -4px -4px 10px #171D2A;
+  --neu-inset-bg: #0A0D12;
+  --neu-inset-shadow: inset 4px 4px 10px #05070A, inset -4px -4px 10px #18202D;
 
-  --neu-border: rgba(255, 255, 255, 0.06);
+  --neu-border: rgba(255, 255, 255, 0.07);
   color-scheme: dark;
 }
 
-/* ── Light Theme (Sculpted Porcelain Soft-UI) ─────────────── */
+/* ── Light Theme (Warm Off-White Stone & Oatmeal Soft-UI) ── */
 /* Strictly declared AFTER dark theme with !important & high specificity */
 :root[data-theme="light"],
 html[data-theme="light"],
@@ -111,16 +111,16 @@ html.light,
 body[data-theme="light"],
 [data-theme="light"],
 .light {
-  --bg-0: #EAECEF !important;
-  --bg-1: #EFF1F5 !important;
-  --surface: #EFF1F5 !important;
-  --raised: #FFFFFF !important;
-  --recessed: #E2E5EC !important;
-  --border-subtle: rgba(255, 255, 255, 0.7) !important;
-  --border-strong: #C8CDD6 !important;
-  --text-1: #0F172A !important;
-  --text-2: #334155 !important;
-  --text-3: #475569 !important;
+  --bg-0: #EAE6DF !important;
+  --bg-1: #F2EFE9 !important;
+  --surface: #F7F5F0 !important;
+  --raised: #FAF8F5 !important;
+  --recessed: #DFDBD2 !important;
+  --border-subtle: rgba(0, 0, 0, 0.08) !important;
+  --border-strong: #CBC6BE !important;
+  --text-1: #14171F !important;
+  --text-2: #2D3340 !important;
+  --text-3: #4A5264 !important;
 
   --ember: #EA580C !important;
   --ember-hot: #C2410C !important;
@@ -132,14 +132,14 @@ body[data-theme="light"],
   --success: #16A34A !important;
   --info: #0284C7 !important;
 
-  --neu-raised-bg: linear-gradient(145deg, #FFFFFF, #E6E9EF) !important;
-  --neu-raised-shadow: 8px 8px 18px #C8CDD6, -8px -8px 18px #FFFFFF, inset 0 1px 1px rgba(255, 255, 255, 0.9) !important;
-  --neu-raised-sm-shadow: 5px 5px 10px #C8CDD6, -5px -5px 10px #FFFFFF !important;
+  --neu-raised-bg: linear-gradient(145deg, #FAF8F3, #EAE6DF) !important;
+  --neu-raised-shadow: 7px 7px 16px #CBC6BE, -7px -7px 16px #FFFFFF, inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+  --neu-raised-sm-shadow: 4px 4px 10px #CBC6BE, -4px -4px 10px #FFFFFF !important;
 
-  --neu-inset-bg: #E2E5EC !important;
-  --neu-inset-shadow: inset 5px 5px 10px #C5C9D2, inset -5px -5px 10px #FFFFFF !important;
+  --neu-inset-bg: #DFDBD2 !important;
+  --neu-inset-shadow: inset 4px 4px 9px #C4C0B7, inset -4px -4px 9px #FAF7F2 !important;
 
-  --neu-border: rgba(255, 255, 255, 0.7) !important;
+  --neu-border: rgba(255, 255, 255, 0.6) !important;
   color-scheme: light;
 }
 

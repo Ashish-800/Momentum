@@ -308,176 +308,118 @@ export default function LedgerPage() {
             </div>
           </div>
 
-          {/* Grouped Decisions List */}
-          <div className="space-y-6">
-            {groupedByTopic.map(([topic, decList]) => (
-              <div key={topic} className="space-y-3">
-                {/* Topic Header */}
-                <div className="flex items-center gap-2 border-b border-white/5 pb-2">
-                  <span className="text-lg">{topicIcon(topic)}</span>
-                  <h2 className="font-display font-semibold text-sm text-text-1 capitalize tracking-wide">
-                    {topic.replace("-", " ")} Domain
-                  </h2>
-                  <span className="text-[10px] font-mono text-text-3">
-                    ({decList.length} {decList.length === 1 ? "record" : "records"})
-                  </span>
-                </div>
+          {/* Exactly 4 Clean Decision Cards Total */}
+          <div className="space-y-4">
+            {filteredDecisions.slice(0, 4).map((dec: any, i: number) => {
+              const owner = getPersonById(dec.ownerId);
+              const meeting = getMeetingById(dec.meetingId);
+              const isSuperseded = (dec.status as string) === "superseded";
 
-                {/* Cards */}
-                <div className="space-y-3">
-                  {decList.map((dec: any, i: number) => {
-                    const owner = getPersonById(dec.ownerId);
-                    const meeting = getMeetingById(dec.meetingId);
-                    const lineage = findLineageChain(dec);
-                    const isSuperseded = (dec.status as string) === "superseded";
+              return (
+                <motion.div
+                  key={dec.id}
+                  className={cn(
+                    "neu-raised p-5 rounded-2xl relative overflow-hidden transition-all bg-surface border border-border-subtle",
+                    isSuperseded && "opacity-75"
+                  )}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.25, delay: i * 0.04 }}
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1 min-w-0 space-y-2">
+                      {/* Status & Topic Badges */}
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span
+                          className={cn(
+                            "inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider",
+                            dec.status === "active" ? "pill-success" : dec.status === "superseded" ? "pill-warning" : "pill-info"
+                          )}
+                        >
+                          {statusLabel(dec.status)}
+                        </span>
 
-                    return (
-                      <motion.div
-                        key={dec.id}
-                        className={cn(
-                          "neu-raised p-5 rounded-2xl relative overflow-hidden transition-all bg-surface border border-border-subtle",
-                          isSuperseded && "opacity-75 border-l-4 border-l-text-3"
+                        <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-recessed text-text-2 border border-border-subtle font-bold">
+                          {dec.topic?.replace("-", " ") || "Decision"}
+                        </span>
+
+                        {meeting && (
+                          <Link
+                            href={`/meetings/${meeting.id}`}
+                            className="text-[11px] font-mono text-text-3 hover:text-ember transition-colors flex items-center gap-1"
+                          >
+                            <span>{meeting.title}</span>
+                            <ExternalLink size={10} />
+                          </Link>
                         )}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.25, delay: i * 0.04 }}
+                      </div>
+
+                      {/* 1-Line 18px Bold Title */}
+                      <h3
+                        className={cn(
+                          "text-[18px] font-bold text-text-1 leading-snug tracking-tight",
+                          isSuperseded && "line-through text-text-3"
+                        )}
                       >
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex-1 min-w-0">
-                            {/* Status & Topic Badges */}
-                            <div className="flex items-center gap-2 mb-2 flex-wrap">
-                              <span
-                                className={cn(
-                                  "inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-mono font-semibold uppercase tracking-wider",
-                                  dec.status === "active" ? "pill-success" : dec.status === "superseded" ? "pill-warning" : "pill-info"
-                                )}
-                              >
-                                {statusLabel(dec.status)}
-                              </span>
+                        {dec.statement}
+                      </h3>
 
-                              {meeting && (
-                                <Link
-                                  href={`/meetings/${meeting.id}`}
-                                  className="text-[10px] font-mono text-text-3 hover:text-ember transition-colors flex items-center gap-1"
-                                >
-                                  <span>{meeting.title}</span>
-                                  <ExternalLink size={10} />
-                                </Link>
-                              )}
-
-                              {dec.effectiveDate && (
-                                <span className="text-[10px] font-mono text-text-3">
-                                  · Effective: {formatDateIST(dec.effectiveDate)}
-                                </span>
-                              )}
-                            </div>
-
-                            {/* Statement */}
-                            <h3
-                              className={cn(
-                                "text-sm font-display font-semibold text-text-1 leading-snug mb-3",
-                                isSuperseded && "line-through text-text-3"
-                              )}
+                      {/* Owner Avatar + Date */}
+                      <div className="flex items-center gap-4 flex-wrap pt-1 text-xs font-mono text-text-3">
+                        {owner && (
+                          <div className="flex items-center gap-1.5">
+                            <span
+                              className="w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold text-black"
+                              style={{ background: owner.accentColor || "#FF7A1A" }}
                             >
-                              {dec.statement}
-                            </h3>
-
-                            {/* ── VISUAL LINEAGE CHAIN ────────────────── */}
-                            {lineage.length > 0 && (
-                              <div className="rounded-xl p-3 mb-3 border-l-[3px] border-l-indigo-500 bg-recessed border border-border-subtle space-y-1.5">
-                                <div className="flex items-center gap-1.5 text-[10px] font-mono text-indigo-600 dark:text-indigo-400 font-bold uppercase tracking-wider">
-                                  <GitBranch size={11} />
-                                  <span>Decision Lineage Chain</span>
-                                </div>
-                                {lineage.map(({ item, relation }: any) => (
-                                  <div
-                                    key={item.id}
-                                    className="flex items-center gap-2 text-xs font-mono"
-                                  >
-                                    {relation === "prior" ? (
-                                      <>
-                                        <span className="text-text-3">Supersedes:</span>
-                                        <span className="line-through text-text-3">
-                                          {item.statement}
-                                        </span>
-                                        <span className="text-[9px] px-1.5 py-0.2 rounded bg-surface border border-border-subtle text-text-3 font-bold">
-                                          Previous
-                                        </span>
-                                      </>
-                                    ) : (
-                                      <>
-                                        <span className="text-text-3">↳ Superseded by:</span>
-                                        <ArrowRight size={12} className="text-ember" />
-                                        <span className="text-indigo-600 dark:text-indigo-400 font-semibold">
-                                          {item.statement}
-                                        </span>
-                                        <span className="text-[9px] px-1.5 py-0.2 rounded pill-success">
-                                          Active Consensus
-                                        </span>
-                                      </>
-                                    )}
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-
-                            {/* Meta & Evidence Chips */}
-                            <div className="flex items-center gap-3 flex-wrap pt-1">
-                              {owner && (
-                                <span className="text-[10px] font-mono text-text-3 flex items-center gap-1">
-                                  <span>Owner:</span>
-                                  <span
-                                    className="font-semibold"
-                                    style={{ color: owner.accentColor ?? "#FF7A1A" }}
-                                  >
-                                    {owner.name}
-                                  </span>
-                                </span>
-                              )}
-
-                              <span className="text-[10px] font-mono text-text-3">
-                                Logged: {formatDateIST(dec.createdAt)}
-                              </span>
-
-                              {Array.isArray(dec.evidenceUtteranceIds) && dec.evidenceUtteranceIds.length > 0 && (
-                                <EvidenceChip
-                                  utteranceId={dec.evidenceUtteranceIds[0]}
-                                  speakerName="View Source Transcript"
-                                />
-                              )}
-                            </div>
+                              {owner.name.charAt(0)}
+                            </span>
+                            <span className="text-text-1 font-semibold">{owner.name}</span>
                           </div>
+                        )}
 
-                          {/* Radial Confidence Ring */}
-                          <div className="flex-shrink-0 pt-1">
-                            {dec.confidence != null && (
-                              <ConfidenceRing
-                                score={dec.confidence}
-                                size={44}
-                                strokeWidth={2.8}
-                              />
-                            )}
-                          </div>
-                        </div>
-                      </motion.div>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
+                        <span>
+                          {dec.effectiveDate
+                            ? `Effective: ${formatDateIST(dec.effectiveDate)}`
+                            : `Logged: ${formatDateIST(dec.createdAt)}`}
+                        </span>
 
-            {filteredDecisions.length === 0 && (
-              <div className="neu-inset rounded-2xl p-12 text-center">
-                <BookOpen size={24} className="mx-auto text-text-3 mb-2 opacity-50" />
-                <p className="text-sm font-semibold text-text-2">
-                  No matching decisions in ledger
-                </p>
-                <p className="text-xs text-text-3 mt-1">
-                  Adjust filters or reset the search query to view all institutional memory.
-                </p>
-              </div>
-            )}
+                        {Array.isArray(dec.evidenceUtteranceIds) && dec.evidenceUtteranceIds.length > 0 && (
+                          <EvidenceChip
+                            utteranceId={dec.evidenceUtteranceIds[0]}
+                            speakerName="View Source Transcript"
+                          />
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Radial Confidence Ring */}
+                    <div className="flex-shrink-0 pt-1">
+                      {dec.confidence != null && (
+                        <ConfidenceRing
+                          score={dec.confidence}
+                          size={44}
+                          strokeWidth={2.8}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
+
+          {filteredDecisions.length === 0 && (
+            <div className="neu-inset rounded-2xl p-12 text-center">
+              <BookOpen size={24} className="mx-auto text-text-3 mb-2 opacity-50" />
+              <p className="text-sm font-semibold text-text-2">
+                No matching decisions in ledger
+              </p>
+              <p className="text-xs text-text-3 mt-1">
+                Adjust filters or reset the search query to view all institutional memory.
+              </p>
+            </div>
+          )}
         </div>
       )}
 

@@ -190,17 +190,17 @@ export default function DigestPage() {
             <Sparkles size={13} />
             <span>Weekly Executive Intro</span>
           </div>
-          <p className="text-sm text-[#0F172A] dark:text-slate-100 leading-relaxed font-sans font-medium">
+          <p className="text-[16px] text-[#0F172A] dark:text-slate-100 leading-relaxed font-sans font-medium">
             {executiveIntro}
           </p>
         </div>
 
-        {/* Section 2: Commitments Due This Week & Overdue */}
+        {/* Section 2: Commitments Due This Week & Overdue (Max 3 Short Bullet Cards) */}
         <div className="space-y-4">
           <div className="flex items-center justify-between pb-2 border-b border-border-subtle">
             <h3 className="text-xs font-mono font-bold text-text-3 uppercase tracking-wider flex items-center gap-2">
               <Calendar size={14} className="text-emerald-600 dark:text-emerald-400" />
-              <span>Deliverables & Commitments ({activeTasks.length})</span>
+              <span>Deliverables & Commitments ({Math.min(activeTasks.length, 3)})</span>
             </h3>
             {overdueTasks.length > 0 && (
               <span className="text-[10px] font-mono font-bold pill-conflict px-2 py-0.5 rounded">
@@ -210,26 +210,28 @@ export default function DigestPage() {
           </div>
 
           {activeTasks.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {activeTasks.map((t: any) => (
-                <div key={t.id} className="p-4 rounded-xl border border-border-subtle bg-recessed space-y-2">
-                  <div className="flex items-center justify-between text-[10px] font-mono">
-                    <span className={cn(
-                      "px-1.5 py-0.5 rounded font-bold uppercase",
-                      t.priority === "critical" ? "pill-conflict" : t.priority === "high" ? "pill-warning" : "bg-surface text-text-3"
-                    )}>
-                      {t.priority}
-                    </span>
-                    <span className={cn("font-bold", t.status === "overdue" ? "text-rose-600 dark:text-rose-400" : "text-emerald-700 dark:text-emerald-400")}>
-                      {t.deadlineText || "Due this week"}
-                    </span>
+            <div className="space-y-3">
+              {activeTasks.slice(0, 3).map((t: any) => (
+                <div key={t.id} className="p-4 rounded-xl border border-border-subtle bg-recessed flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className={cn(
+                        "px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase",
+                        t.priority === "critical" ? "pill-conflict" : t.priority === "high" ? "pill-warning" : "bg-surface text-text-3"
+                      )}>
+                        {t.priority}
+                      </span>
+                      <span className={cn("text-xs font-mono font-bold", t.status === "overdue" ? "text-rose-600 dark:text-rose-400" : "text-emerald-700 dark:text-emerald-400")}>
+                        {t.deadlineText || "Due this week"}
+                      </span>
+                    </div>
+                    <p className="text-[16px] font-semibold text-text-1">
+                      {t.title}
+                    </p>
                   </div>
-                  <p className="text-xs font-semibold text-text-1">
-                    {t.title}
-                  </p>
                   {t.meetingId && (
-                    <div className="pt-2 flex items-center justify-between text-[10px] font-mono text-text-3 border-t border-border-subtle">
-                      <span>Source: {humanMeetingLabel(t.meetingId)}</span>
+                    <div className="flex items-center gap-2 text-xs font-mono text-text-3 flex-shrink-0">
+                      <span>{humanMeetingLabel(t.meetingId)}</span>
                       {t.evidenceUtteranceIds?.[0] && (
                         <EvidenceChip utteranceId={t.evidenceUtteranceIds[0]} />
                       )}
@@ -239,32 +241,32 @@ export default function DigestPage() {
               ))}
             </div>
           ) : (
-            <div className="p-4 rounded-xl text-center text-xs text-text-3 bg-recessed border border-border-subtle">
+            <p className="text-sm text-text-3 font-medium">
               Zero pending tasks assigned to {selectedPerson.name.split(" ")[0]} this week.
-            </div>
+            </p>
           )}
         </div>
 
-        {/* Section 3: Decisions Affecting Your Domain */}
+        {/* Section 3: Decisions Affecting Your Domain (Max 3 Clean Bullets) */}
         <div className="space-y-4">
           <h3 className="text-xs font-mono font-bold text-text-3 uppercase tracking-wider flex items-center gap-2 pb-2 border-b border-border-subtle">
             <FileText size={14} className="text-ember" />
-            <span>Institutional Decisions Affecting Your Domain ({relevantDecisions.length})</span>
+            <span>Institutional Decisions Affecting Your Domain ({Math.min(relevantDecisions.length, 3)})</span>
           </h3>
 
           <div className="space-y-2.5">
-            {relevantDecisions.map((d: any) => (
-              <div key={d.id} className="p-3.5 rounded-xl border border-border-subtle bg-recessed flex items-start justify-between gap-4">
+            {relevantDecisions.slice(0, 3).map((d: any) => (
+              <div key={d.id} className="p-4 rounded-xl border border-border-subtle bg-recessed flex items-start justify-between gap-4">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-surface border border-border-subtle text-text-2 font-bold">
+                    <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-surface border border-border-subtle text-text-2 font-bold">
                       {d.topic}
                     </span>
                     <span className="text-[10px] font-mono pill-success font-semibold uppercase">
                       {d.status}
                     </span>
                   </div>
-                  <p className="text-xs font-medium text-text-1 leading-snug">
+                  <p className="text-[16px] font-semibold text-text-1 leading-snug">
                     {d.statement}
                   </p>
                 </div>
@@ -278,25 +280,25 @@ export default function DigestPage() {
           </div>
         </div>
 
-        {/* Section 4: Open Policy Conflicts or Clarifications */}
+        {/* Section 4: Open Policy Conflicts (Max 1 Clean Alert) */}
         {conflicts.length > 0 && (
           <div className="space-y-3">
             <h3 className="text-xs font-mono font-bold text-rose-600 dark:text-rose-400 uppercase tracking-wider flex items-center gap-2 pb-2 border-b border-border-subtle">
               <ShieldAlert size={14} className="text-rose-600 dark:text-rose-400" />
-              <span>Cross-Meeting Conflicts Requiring Domain Alignment ({conflicts.length})</span>
+              <span>Cross-Meeting Conflicts Requiring Domain Alignment (1)</span>
             </h3>
 
             <div className="space-y-2">
-              {conflicts.map((c: any) => (
-                <div key={c.id} className="p-3.5 rounded-xl border border-rose-500/30 bg-rose-500/10 space-y-1.5">
-                  <div className="flex items-center justify-between text-[10px] font-mono text-rose-700 dark:text-rose-300 font-bold uppercase">
+              {conflicts.slice(0, 1).map((c: any) => (
+                <div key={c.id} className="p-4 rounded-xl border border-rose-500/30 bg-rose-500/10 space-y-2">
+                  <div className="flex items-center justify-between text-xs font-mono text-rose-700 dark:text-rose-300 font-bold uppercase">
                     <span>{c.conflictType} conflict · {c.severity} severity</span>
-                    <Link href="/review" className="underline hover:text-text-1 flex items-center gap-1">
+                    <Link href="/review" className="underline hover:text-text-1 flex items-center gap-1 font-semibold">
                       <span>Resolve in Review Gate</span>
-                      <ArrowRight size={10} />
+                      <ArrowRight size={12} />
                     </Link>
                   </div>
-                  <p className="text-xs text-text-1 font-medium">
+                  <p className="text-[15px] text-text-1 font-medium leading-relaxed">
                     {c.explanation}
                   </p>
                 </div>

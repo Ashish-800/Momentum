@@ -435,16 +435,6 @@ export default function StudioPage() {
             <span>Import Transcript</span>
           </button>
         </div>
-
-        {/* Load Demo Recap Button */}
-        <button
-          onClick={handleLoadDemoRecap}
-          disabled={isTypewriting}
-          className="btn-secondary px-3.5 py-2 rounded-xl text-xs font-mono font-semibold flex items-center gap-1.5 cursor-pointer"
-        >
-          <Sparkles size={13} className={isTypewriting ? "animate-spin text-ember" : "text-ember"} />
-          <span>{isTypewriting ? "Streaming..." : "Load Demo Recap"}</span>
-        </button>
       </div>
 
       {/* Roster Chips ONLY shown in Round-Table Mode */}
@@ -536,21 +526,12 @@ export default function StudioPage() {
             {/* Mode A: Voice Debrief */}
             {captureMode === "debrief" && (
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-mono font-bold text-text-1 uppercase tracking-wider">
-                      Single-Speaker Recap
-                    </span>
-                    <span className="text-[10px] font-mono text-text-3">
-                      Speaker: Priya Nair (PM)
-                    </span>
-                  </div>
-
+                <div className="flex items-center justify-end">
                   {/* Tactile "Load Demo Recap" Button */}
                   <button
                     onClick={handleLoadDemoRecap}
                     disabled={isTypewriting}
-                    className="neu-button px-3.5 py-1.5 rounded-xl text-xs font-mono font-semibold text-ember flex items-center gap-1.5 hover:bg-ember/10 transition-colors"
+                    className="neu-button px-3.5 py-1.5 rounded-xl text-xs font-mono font-semibold text-ember flex items-center gap-1.5 hover:bg-ember/10 transition-colors cursor-pointer"
                   >
                     <Sparkles size={13} className={isTypewriting ? "animate-spin" : ""} />
                     <span>{isTypewriting ? "Streaming Demo..." : "Load Demo Recap"}</span>
@@ -565,18 +546,6 @@ export default function StudioPage() {
                     placeholder="Press your Wispr Flow shortcut and dictate what happened in the meeting..."
                     className="w-full bg-transparent text-[16px] lg:text-[18px] text-text-1 placeholder:text-text-3 outline-none resize-none min-h-[220px] leading-relaxed font-ui"
                   />
-
-                  {/* Telemetry Footer */}
-                  <div className="flex items-center justify-between pt-3 border-t border-white/5 text-[11px] font-mono text-text-3">
-                    <span className="flex items-center gap-2">
-                      <span className="text-text-2 font-semibold">{wordCount} words</span>
-                      <span>·</span>
-                      <span>{debriefText.length} chars</span>
-                    </span>
-                    <span className="text-ember">
-                      Est. Processing Time: ~{estimatedProcessingTimeSec}s
-                    </span>
-                  </div>
                 </div>
               </div>
             )}

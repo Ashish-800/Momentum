@@ -17,7 +17,9 @@ import {
   Search,
   ChevronDown,
   Sparkles,
+  ChevronLeft,
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { AssistantPanel } from "@/components/closeloop/AssistantPanel";
 import { CommandPalette } from "@/components/closeloop/CommandPalette";
 import { TimeMachinePill } from "@/components/closeloop/TimeMachinePill";
@@ -28,7 +30,7 @@ import { DEMO_SEED_DATA } from "@/lib/db/seed";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
-  { href: "/home", icon: Home, label: "Command Center" },
+  { href: "/home", icon: Home, label: "Home" },
   { href: "/studio", icon: Mic, label: "Voice Studio" },
   { href: "/review", icon: CheckSquare, label: "Review Gate", badge: 3 },
   { href: "/ledger", icon: BookOpen, label: "Decision Ledger" },
@@ -45,6 +47,7 @@ export function AppShellClient({
   const router = useRouter();
 
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const [assistantOpen, setAssistantOpen] = useState(true);
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
@@ -186,14 +189,14 @@ export function AppShellClient({
   }, []);
 
   function getPageTitle() {
-    if (pathname.startsWith("/home")) return "Command Center";
+    if (pathname.startsWith("/home")) return "Momentum";
     if (pathname.startsWith("/studio")) return "Voice Studio";
-    if (pathname.startsWith("/review")) return "Review Gate & Approvals";
-    if (pathname.startsWith("/ledger")) return "Decision Ledger & Lineage";
-    if (pathname.startsWith("/week")) return "My Week & Commitments";
-    if (pathname.startsWith("/digest")) return "Personalized Weekly Digest";
-    if (pathname.startsWith("/settings")) return "Workspace Settings";
-    if (pathname.startsWith("/meetings")) return "Meeting Detail & Analysis";
+    if (pathname.startsWith("/review")) return "Review Gate";
+    if (pathname.startsWith("/ledger")) return "Decision Ledger";
+    if (pathname.startsWith("/week")) return "My Week";
+    if (pathname.startsWith("/digest")) return "Weekly Digest";
+    if (pathname.startsWith("/settings")) return "Settings";
+    if (pathname.startsWith("/meetings")) return "Meeting Detail";
     return "Momentum";
   }
 
@@ -202,26 +205,57 @@ export function AppShellClient({
       className="flex min-h-dvh"
       style={{ backgroundColor: "var(--bg-0)", color: "var(--text-1)" }}
     >
-      {/* ── Left Navigation Rail (68px wide) ──────────────────── */}
-      <aside
+      {/* ── Left Navigation Rail (Expandable 76px <-> 240px) ──────────────────── */}
+      <motion.aside
+        initial={false}
+        animate={{ width: isSidebarExpanded ? 240 : 76 }}
+        transition={{ type: "spring", stiffness: 300, damping: 28 }}
         className={cn(
-          "hidden md:flex flex-col items-center justify-between py-5 z-40 sticky top-0 h-dvh",
-          "w-[68px] border-r border-border-subtle"
+          "hidden md:flex flex-col justify-between py-5 z-40 sticky top-0 h-dvh flex-shrink-0 overflow-hidden",
+          "border-r border-border-subtle",
+          isSidebarExpanded ? "px-3" : "px-2 items-center"
         )}
         style={{ backgroundColor: "var(--bg-1)", borderColor: "var(--border-subtle)" }}
       >
-        {/* Top: Momentum Brand Logo */}
-        <div className="flex flex-col items-center gap-6">
-          <Link
-            href="/home"
-            title="Momentum — Command Center"
-            className="block rounded-xl transition-all hover:opacity-90 hover:scale-105 active:scale-95"
-          >
-            <MomentumLogo variant="icon" size={42} />
-          </Link>
+        {/* Top: Momentum Brand Logo & Navigation */}
+        <div className="flex flex-col gap-6 w-full">
+          {/* Logo / Header with Toggle */}
+          {isSidebarExpanded ? (
+            <div className="flex items-center justify-between w-full px-2 py-1">
+              <Link
+                href="/home"
+                title="Momentum Home"
+                className="flex items-center gap-3 min-w-0 group"
+              >
+                <MomentumLogo variant="icon" size={36} />
+                <span className="font-sans font-extrabold italic tracking-tight text-[20px] text-text-1 truncate group-hover:text-ember transition-colors">
+                  Momentum
+                </span>
+              </Link>
+              <button
+                type="button"
+                onClick={() => setIsSidebarExpanded(false)}
+                title="Collapse sidebar"
+                className="w-7 h-7 flex items-center justify-center rounded-lg text-text-3 hover:text-text-1 hover:bg-recessed transition-colors cursor-pointer flex-shrink-0"
+              >
+                <ChevronLeft size={18} />
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center w-full">
+              <button
+                type="button"
+                onClick={() => setIsSidebarExpanded(true)}
+                title="Click to expand sidebar"
+                className="block rounded-xl transition-all hover:opacity-90 hover:scale-105 active:scale-95 cursor-pointer p-1"
+              >
+                <MomentumLogo variant="icon" size={40} />
+              </button>
+            </div>
+          )}
 
           {/* 6 Clean Navigation Items */}
-          <nav className="flex flex-col items-center gap-2">
+          <nav className="flex flex-col gap-1.5 w-full">
             {NAV_ITEMS.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href || (item.href !== "/home" && pathname.startsWith(item.href));
@@ -231,7 +265,10 @@ export function AppShellClient({
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "relative w-11 h-11 flex items-center justify-center rounded-xl transition-all group",
+                    "relative flex items-center rounded-xl transition-all group cursor-pointer",
+                    isSidebarExpanded
+                      ? "px-3.5 py-2.5 gap-3 w-full"
+                      : "w-11 h-11 justify-center mx-auto",
                     isActive
                       ? "bg-ember/10 text-ember font-bold"
                       : "text-text-3 hover:text-text-1 hover:bg-recessed"
@@ -243,10 +280,23 @@ export function AppShellClient({
                     <span className="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-ember" />
                   )}
 
-                  <Icon size={19} strokeWidth={isActive ? 2.5 : 2} />
+                  <Icon size={20} strokeWidth={isActive ? 2.5 : 2} className="flex-shrink-0" />
+
+                  {isSidebarExpanded && (
+                    <span className="text-[15px] font-medium truncate flex-1 text-left">
+                      {item.label}
+                    </span>
+                  )}
 
                   {item.badge && (
-                    <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-ember text-white font-mono font-bold text-[9px] flex items-center justify-center shadow-sm">
+                    <span
+                      className={cn(
+                        "rounded-full bg-ember text-white font-mono font-bold flex items-center justify-center shadow-sm",
+                        isSidebarExpanded
+                          ? "px-2 py-0.5 text-[10px] ml-auto"
+                          : "absolute -top-1 -right-1 w-4 h-4 text-[9px]"
+                      )}
+                    >
                       {item.badge}
                     </span>
                   )}
@@ -257,7 +307,7 @@ export function AppShellClient({
         </div>
 
         {/* Bottom Rail: Theme Switcher, Notifications Bell & Settings Gear */}
-        <div className="flex flex-col items-center gap-2.5">
+        <div className={cn("flex flex-col gap-1.5 w-full", isSidebarExpanded ? "px-1" : "items-center")}>
           {/* Theme Toggle Button (Sun / Moon) */}
           <button
             type="button"
@@ -265,25 +315,48 @@ export function AppShellClient({
               e.preventDefault();
               toggleTheme();
             }}
-            className="w-10 h-10 flex items-center justify-center rounded-xl text-text-3 hover:text-text-1 hover:bg-recessed transition-colors cursor-pointer"
+            className={cn(
+              "flex items-center rounded-xl text-text-3 hover:text-text-1 hover:bg-recessed transition-colors cursor-pointer",
+              isSidebarExpanded ? "px-3.5 py-2.5 gap-3 w-full" : "w-11 h-11 justify-center"
+            )}
             title={`Switch to ${theme === "dark" ? "Light" : "Dark"} mode`}
             aria-label="Toggle Theme"
           >
             {theme === "dark" ? (
-              <Sun size={18} className="text-amber-400" />
+              <Sun size={19} className="text-amber-400 flex-shrink-0" />
             ) : (
-              <Moon size={18} className="text-indigo-600" />
+              <Moon size={19} className="text-indigo-600 flex-shrink-0" />
+            )}
+            {isSidebarExpanded && (
+              <span className="text-[15px] font-medium truncate">
+                {theme === "dark" ? "Light Mode" : "Dark Mode"}
+              </span>
             )}
           </button>
 
           <button
             onClick={() => setNotificationsOpen(true)}
-            className="relative w-10 h-10 flex items-center justify-center rounded-xl text-text-3 hover:text-text-1 hover:bg-recessed transition-colors cursor-pointer"
-            title="Deadline Notifications"
+            className={cn(
+              "relative flex items-center rounded-xl text-text-3 hover:text-text-1 hover:bg-recessed transition-colors cursor-pointer",
+              isSidebarExpanded ? "px-3.5 py-2.5 gap-3 w-full" : "w-11 h-11 justify-center"
+            )}
+            title="Notifications"
           >
-            <Bell size={18} />
+            <Bell size={19} className="flex-shrink-0" />
+            {isSidebarExpanded && (
+              <span className="text-[15px] font-medium truncate flex-1 text-left">
+                Notifications
+              </span>
+            )}
             {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-conflict text-white text-[9px] font-mono font-bold flex items-center justify-center">
+              <span
+                className={cn(
+                  "rounded-full bg-conflict text-white font-mono font-bold flex items-center justify-center",
+                  isSidebarExpanded
+                    ? "px-2 py-0.5 text-[10px] ml-auto"
+                    : "absolute -top-1 -right-1 w-4 h-4 text-[9px]"
+                )}
+              >
                 {unreadCount}
               </span>
             )}
@@ -292,19 +365,23 @@ export function AppShellClient({
           <Link
             href="/settings"
             className={cn(
-              "w-10 h-10 flex items-center justify-center rounded-xl text-text-3 hover:text-text-1 hover:bg-recessed transition-colors",
+              "flex items-center rounded-xl text-text-3 hover:text-text-1 hover:bg-recessed transition-colors cursor-pointer",
+              isSidebarExpanded ? "px-3.5 py-2.5 gap-3 w-full" : "w-11 h-11 justify-center",
               pathname === "/settings" && "text-ember bg-ember/10 font-bold"
             )}
-            title="Workspace Settings"
+            title="Settings"
           >
-            <Settings size={18} />
+            <Settings size={19} className="flex-shrink-0" />
+            {isSidebarExpanded && (
+              <span className="text-[15px] font-medium truncate">Settings</span>
+            )}
           </Link>
         </div>
-      </aside>
+      </motion.aside>
 
       {/* ── Main App Content & Top Header ──────────────────── */}
       <div className="flex-1 min-w-0 flex flex-col min-h-dvh">
-        {/* Top Workspace Header (ONLY 4 Clean Elements) */}
+        {/* Top Workspace Header */}
         <header
           className="sticky top-0 z-30 h-16 border-b border-border-subtle backdrop-blur-md px-6 flex items-center justify-between gap-4"
           style={{ backgroundColor: "var(--bg-1)", borderColor: "var(--border-subtle)" }}
@@ -312,33 +389,13 @@ export function AppShellClient({
           {/* Element 1: Left Page Title */}
           <div className="flex items-center gap-3">
             {pathname === "/home" ? (
-              <h1 className="font-display font-bold text-[20px] text-text-1">
-                Home
+              <h1 className="font-sans font-extrabold italic tracking-tight text-[24px] text-text-1">
+                Momentum
               </h1>
             ) : (
-              <>
-                <span
-                  className="hidden lg:block font-black italic text-sm tracking-tight leading-none flex-shrink-0"
-                  style={{
-                    background: "linear-gradient(90deg, #1A4BFF 0%, #7C3AED 60%, #EC4899 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                    letterSpacing: "-0.03em",
-                  }}
-                >
-                  Momentum
-                </span>
-                <h1 className="font-display font-bold text-[18px] text-text-1 hidden sm:block">
-                  {getPageTitle()}
-                </h1>
-                <div className="px-2.5 py-1 rounded-full flex items-center gap-2 text-xs font-mono bg-recessed text-text-3 border border-border-subtle">
-                  <span className="text-text-2 font-semibold">Northstar Labs</span>
-                  <span>/</span>
-                  <span className="text-ember font-medium">Mobile v2</span>
-                  <ChevronDown size={12} className="text-text-3" />
-                </div>
-              </>
+              <h1 className="font-sans font-bold tracking-tight text-[22px] text-text-1">
+                {getPageTitle()}
+              </h1>
             )}
           </div>
 

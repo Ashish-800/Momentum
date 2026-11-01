@@ -105,6 +105,11 @@ export default function WeekPage() {
     });
   }, [enrichedTasks, selectedOwnerId, selectedPriority, searchQuery]);
 
+  // Show at most 4 clean task cards across the board
+  const displayedTasks = useMemo<EnrichedTask[]>(() => {
+    return filteredTasks.slice(0, 4);
+  }, [filteredTasks]);
+
   // Lanes for Kanban
   const LANES = [
     {
@@ -304,7 +309,7 @@ export default function WeekPage() {
       {viewMode === "kanban" && (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 items-start">
           {LANES.map((lane) => {
-            const laneTasks: EnrichedTask[] = filteredTasks.filter(lane.matcher);
+            const laneTasks: EnrichedTask[] = displayedTasks.filter(lane.matcher);
 
             return (
               <div
@@ -389,7 +394,7 @@ export default function WeekPage() {
                         {task.status === "completed" && (
                           <span className="text-emerald-600 dark:text-emerald-400 font-bold text-xs">✓</span>
                         )}
-                        <h4 className="text-xs font-display font-semibold text-text-1 leading-snug group-hover:text-ember transition-colors">
+                        <h4 className="text-[15px] font-semibold text-text-1 leading-snug group-hover:text-ember transition-colors">
                           {task.title}
                         </h4>
                       </div>
@@ -449,7 +454,7 @@ export default function WeekPage() {
       {viewMode === "list" && (
         <div className="neu-raised rounded-2xl overflow-hidden border border-white/5">
           <div className="divide-y divide-white/5">
-            {filteredTasks.map((task: EnrichedTask) => (
+            {displayedTasks.map((task: EnrichedTask) => (
               <div
                 key={task.id}
                 onClick={() => setSelectedTask(task)}
@@ -509,7 +514,7 @@ export default function WeekPage() {
 
                     <h4
                       className={cn(
-                        "text-xs font-display font-semibold text-text-1 group-hover:text-ember transition-colors",
+                        "text-[15px] font-semibold text-text-1 group-hover:text-ember transition-colors",
                         task.status === "completed" && "line-through text-text-3"
                       )}
                     >
