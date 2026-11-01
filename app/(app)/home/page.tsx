@@ -19,6 +19,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { PulseStat } from "@/components/closeloop/PulseStat";
 import { MeetingCard } from "@/components/closeloop/MeetingCard";
+import { TiltCard3D } from "@/components/three/TiltCard3D";
 import { DEMO_SEED_DATA } from "@/lib/db/seed";
 
 export default function HomePage() {
@@ -68,8 +69,7 @@ export default function HomePage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="font-display font-bold text-2xl lg:text-3xl text-text-1 tracking-tight">
-            Good afternoon, Priya — your team’s institutional{" "}
-            <span className="font-accent text-ember italic font-normal">memory</span> is synced
+            Good afternoon, <span className="font-accent text-ember italic font-normal">Priya</span>
           </h1>
         </div>
 
@@ -147,115 +147,122 @@ export default function HomePage() {
 
       {/* ── ROW 2: 3 High-Contrast "Needs Attention" Cards ──── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Card 1: Conflict Alert (Rose Accent) */}
-        <div className="neu-raised p-5 flex flex-col justify-between border-l-4 border-l-[#E11D48] bg-surface">
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="pill-conflict px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider flex items-center gap-1.5">
-                <AlertTriangle size={11} />
-                Schedule Conflict Detected
-              </span>
-              <span className="text-[11px] font-mono text-text-3 font-semibold">High Severity</span>
-            </div>
-            <h3 className="font-display font-bold text-base text-text-1 leading-snug">
-              Proposed 1 Dec Release vs Confirmed 15 Nov
-            </h3>
-            <p className="text-xs text-text-2 leading-relaxed">
-              Tech Innovations Workshop proposed postponing Android release to 1 Dec for offline vector indexing.
-            </p>
-          </div>
-          <div className="mt-4 pt-3 border-t border-border-subtle flex items-center justify-end">
-            <button
-              onClick={() => router.push("/review")}
-              className="btn-secondary px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
-            >
-              <span>Inspect Clash</span>
-              <ArrowRight size={13} />
-            </button>
-          </div>
-        </div>
-
-        {/* Card 2: Pending Approvals (Ember Accent) */}
-        <div className="neu-raised p-5 flex flex-col justify-between border-l-4 border-l-[#EA580C] bg-surface">
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="pill-pending px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider flex items-center gap-1.5">
-                <CheckSquare size={11} />
-                Human-In-The-Loop Gate
-              </span>
-              <span className="pill-pending px-1.5 py-0.5 rounded text-[10px] font-mono font-bold">
-                3 Staged
-              </span>
-            </div>
-            <h3 className="font-display font-bold text-base text-text-1 leading-snug">
-              3 Extracted Items Awaiting Your Sign-Off
-            </h3>
-            <p className="text-xs text-text-2 leading-relaxed">
-              Push notification vendor selection, 10k load testing credit, and Hindi/Japanese localization scopes.
-            </p>
-          </div>
-          <div className="mt-4 pt-3 border-t border-border-subtle flex items-center justify-end">
-            <Link
-              href="/review"
-              className="btn-primary px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
-            >
-              <span>Open Review Tray</span>
-              <ArrowRight size={13} />
-            </Link>
-          </div>
-        </div>
-
-        {/* Card 3: Due Within 24h (Amber Accent) */}
-        <div className="neu-raised p-5 flex flex-col justify-between border-l-4 border-l-[#D97706] bg-surface">
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="pill-warning px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider flex items-center gap-1.5">
-                <Clock size={11} />
-                Due Within 24 Hours
-              </span>
-              <span className="pill-warning px-1.5 py-0.5 rounded text-[10px] font-mono font-bold">
-                1 Nov · 12:00 IST
-              </span>
-            </div>
-            <h3 className="font-display font-bold text-base text-text-1 leading-snug">
-              Arjun Rao: Cut Release Branch (v2.0-rc1)
-            </h3>
-            <p className="text-xs text-text-2 leading-relaxed">
-              Critical prerequisite for QA full regression pass. Due in 23 hours from simulated current time.
-            </p>
-          </div>
-          <div className="mt-4 pt-3 border-t border-border-subtle flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-full bg-decision/15 text-decision text-[10px] font-bold flex items-center justify-center font-mono">
-                AR
+        {/* Card 1: Conflict Alert */}
+        <TiltCard3D intensity={8} className="h-full rounded-[20px]">
+          <div className="neu-raised p-5 flex flex-col justify-between h-full border-l-4 border-l-[#E11D48] bg-surface preserve-3d">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="pill-conflict px-2.5 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider flex items-center gap-1.5" style={{ transform: "translateZ(24px)" }}>
+                  <AlertTriangle size={11} />
+                  Conflict
+                </span>
+                <span className="text-[11px] font-mono text-text-3 font-semibold">High Severity</span>
               </div>
-              <span className="text-xs font-mono text-text-2 font-medium">Arjun Rao</span>
+              <h3 className="font-display font-bold text-base text-text-1 leading-snug">
+                Launch: 1 Dec vs 15 Nov
+              </h3>
             </div>
-            <button
-              onClick={() => {
-                setNudged(true);
-                setTimeout(() => setNudged(false), 2000);
-              }}
-              className="btn-secondary px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
-            >
-              <BellRing size={12} />
-              <span>{nudged ? "Reminder Sent ✓" : "Send Reminder"}</span>
-            </button>
+            <div className="mt-4 pt-3 border-t border-border-subtle flex items-center justify-between preserve-3d">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-full bg-conflict/15 text-conflict text-[10px] font-bold flex items-center justify-center font-mono">
+                  PN
+                </div>
+                <span className="text-xs font-mono text-text-2 font-medium">Priya Nair</span>
+              </div>
+              <button
+                onClick={() => router.push("/review")}
+                style={{ transform: "translateZ(28px)" }}
+                className="btn-secondary px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer shadow-sm hover:translate-y-[-1px] transition-transform"
+              >
+                <span>Inspect</span>
+                <ArrowRight size={13} />
+              </button>
+            </div>
           </div>
-        </div>
+        </TiltCard3D>
+
+        {/* Card 2: Pending Approvals */}
+        <TiltCard3D intensity={8} className="h-full rounded-[20px]">
+          <div className="neu-raised p-5 flex flex-col justify-between h-full border-l-4 border-l-[#EA580C] bg-surface preserve-3d">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="pill-pending px-2.5 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider flex items-center gap-1.5" style={{ transform: "translateZ(24px)" }}>
+                  <CheckSquare size={11} />
+                  Approval
+                </span>
+                <span className="pill-pending px-1.5 py-0.5 rounded text-[10px] font-mono font-bold">
+                  3 Staged
+                </span>
+              </div>
+              <h3 className="font-display font-bold text-base text-text-1 leading-snug">
+                3 Items Ready for Review
+              </h3>
+            </div>
+            <div className="mt-4 pt-3 border-t border-border-subtle flex items-center justify-between preserve-3d">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-full bg-ember/15 text-ember text-[10px] font-bold flex items-center justify-center font-mono">
+                  MS
+                </div>
+                <span className="text-xs font-mono text-text-2 font-medium">Meera Shah</span>
+              </div>
+              <Link
+                href="/review"
+                style={{ transform: "translateZ(28px)" }}
+                className="btn-primary px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer shadow-sm hover:translate-y-[-1px] transition-transform"
+              >
+                <span>Review</span>
+                <ArrowRight size={13} />
+              </Link>
+            </div>
+          </div>
+        </TiltCard3D>
+
+        {/* Card 3: Due Within 24h */}
+        <TiltCard3D intensity={8} className="h-full rounded-[20px]">
+          <div className="neu-raised p-5 flex flex-col justify-between h-full border-l-4 border-l-[#D97706] bg-surface preserve-3d">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="pill-warning px-2.5 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider flex items-center gap-1.5" style={{ transform: "translateZ(24px)" }}>
+                  <Clock size={11} />
+                  Due in 23h
+                </span>
+                <span className="pill-warning px-1.5 py-0.5 rounded text-[10px] font-mono font-bold">
+                  1 Nov · 12:00
+                </span>
+              </div>
+              <h3 className="font-display font-bold text-base text-text-1 leading-snug">
+                Cut Release Branch v2.0
+              </h3>
+            </div>
+            <div className="mt-4 pt-3 border-t border-border-subtle flex items-center justify-between preserve-3d">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-full bg-decision/15 text-decision text-[10px] font-bold flex items-center justify-center font-mono">
+                  AR
+                </div>
+                <span className="text-xs font-mono text-text-2 font-medium">Arjun Rao</span>
+              </div>
+              <button
+                onClick={() => {
+                  setNudged(true);
+                  setTimeout(() => setNudged(false), 2000);
+                }}
+                style={{ transform: "translateZ(28px)" }}
+                className="btn-secondary px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer shadow-sm hover:translate-y-[-1px] transition-transform"
+              >
+                <BellRing size={12} />
+                <span>{nudged ? "Nudged ✓" : "Nudge"}</span>
+              </button>
+            </div>
+          </div>
+        </TiltCard3D>
       </div>
 
-      {/* ── ROW 3: Institutional Meeting Library Grid ───────── */}
+      {/* ── ROW 3: Recent Meetings Grid ──────────────────────── */}
       <div className="space-y-4 pt-2">
         <div className="flex items-center justify-between">
-          <div>
-            <h2 className="font-display font-bold text-lg text-text-1">
-              Institutional Meeting Library
-            </h2>
-            <p className="text-xs text-text-3">
-              Permanent consensus and decision provenance from 9 recorded team syncs
-            </p>
-          </div>
+          <h2 className="font-display font-bold text-lg text-text-1">
+            Recent Meetings
+          </h2>
           <Link
             href="/studio"
             className="btn-primary px-3.5 py-1.5 rounded-xl text-xs font-mono flex items-center gap-1.5"

@@ -195,9 +195,6 @@ export default function LedgerPage() {
           <h1 className="font-display font-bold text-2xl lg:text-3xl text-text-1">
             Decision Ledger & <span className="font-accent text-decision">Lineage</span>
           </h1>
-          <p className="text-text-3 text-xs mt-1">
-            Immutable cross-meeting consensus, conflict detection radar, and historical lineage chains.
-          </p>
         </div>
 
         {/* View Switcher */}
@@ -378,19 +375,12 @@ export default function LedgerPage() {
                             {/* Statement */}
                             <h3
                               className={cn(
-                                "text-sm font-display font-semibold text-text-1 leading-snug mb-2",
+                                "text-sm font-display font-semibold text-text-1 leading-snug mb-3",
                                 isSuperseded && "line-through text-text-3"
                               )}
                             >
                               {dec.statement}
                             </h3>
-
-                            {/* Rationale */}
-                            {dec.rationale && (
-                              <p className="text-xs text-text-2 leading-relaxed mb-3 font-ui">
-                                {dec.rationale}
-                              </p>
-                            )}
 
                             {/* ── VISUAL LINEAGE CHAIN ────────────────── */}
                             {lineage.length > 0 && (

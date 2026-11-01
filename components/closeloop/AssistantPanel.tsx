@@ -146,8 +146,13 @@ export function AssistantPanel({ isOpen, onToggle }: AssistantPanelProps) {
                 <span>Grounded Memory Assistant</span>
                 <span className="w-1.5 h-1.5 rounded-full bg-action animate-pulse" />
               </div>
-              <div className="text-[10px] font-mono text-text-3">
-                Cross-Meeting RAG · Zero Hallucination
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <span className="text-[10px] font-mono text-text-3">
+                  Cross-Meeting RAG
+                </span>
+                <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded bg-ember/10 text-ember border border-ember/20 text-[9px] font-mono font-semibold">
+                  ⚡ Powered by Gemini 3.8 Flash
+                </span>
               </div>
             </div>
           </div>

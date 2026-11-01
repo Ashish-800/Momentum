@@ -263,9 +263,6 @@ export default function ReviewPage() {
           <h1 className="font-display font-bold text-2xl text-text-1">
             Review <span className="font-accent text-ember">Gate</span> & 3D Split Diff
           </h1>
-          <p className="text-xs text-text-3 font-mono mt-1">
-            Nothing reaches persistent institutional memory or external task trackers without explicit confirmation.
-          </p>
         </div>
 
         {/* Bulk Action */}

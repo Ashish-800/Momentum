@@ -118,9 +118,6 @@ export default function DigestPage() {
             <h1 className="font-display font-bold text-2xl text-text-1">
               Personalized <span className="font-accent text-decision font-normal">Weekly Digest</span>
             </h1>
-            <p className="text-xs text-text-3 font-mono mt-1">
-              Curated Monday morning intelligence: tasks, blockers, domain decisions, and conflict alerts.
-            </p>
           </div>
 
           <div className="flex items-center gap-3">

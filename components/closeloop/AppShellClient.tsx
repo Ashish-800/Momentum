@@ -309,30 +309,37 @@ export function AppShellClient({
           className="sticky top-0 z-30 h-16 border-b border-border-subtle backdrop-blur-md px-6 flex items-center justify-between gap-4"
           style={{ backgroundColor: "var(--bg-1)", borderColor: "var(--border-subtle)" }}
         >
-          {/* Element 1: Left Page Title + Momentum brand badge + project context */}
+          {/* Element 1: Left Page Title */}
           <div className="flex items-center gap-3">
-            {/* Momentum wordmark — subtle brand reinforcement in header */}
-            <span
-              className="hidden lg:block font-black italic text-sm tracking-tight leading-none flex-shrink-0"
-              style={{
-                background: "linear-gradient(90deg, #1A4BFF 0%, #7C3AED 60%, #EC4899 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                letterSpacing: "-0.03em",
-              }}
-            >
-              Momentum
-            </span>
-            <h1 className="font-display font-bold text-[18px] text-text-1 hidden sm:block">
-              {getPageTitle()}
-            </h1>
-            <div className="px-2.5 py-1 rounded-full flex items-center gap-2 text-xs font-mono bg-recessed text-text-3 border border-border-subtle">
-              <span className="text-text-2 font-semibold">Northstar Labs</span>
-              <span>/</span>
-              <span className="text-ember font-medium">Mobile v2</span>
-              <ChevronDown size={12} className="text-text-3" />
-            </div>
+            {pathname === "/home" ? (
+              <h1 className="font-display font-bold text-[20px] text-text-1">
+                Home
+              </h1>
+            ) : (
+              <>
+                <span
+                  className="hidden lg:block font-black italic text-sm tracking-tight leading-none flex-shrink-0"
+                  style={{
+                    background: "linear-gradient(90deg, #1A4BFF 0%, #7C3AED 60%, #EC4899 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                    letterSpacing: "-0.03em",
+                  }}
+                >
+                  Momentum
+                </span>
+                <h1 className="font-display font-bold text-[18px] text-text-1 hidden sm:block">
+                  {getPageTitle()}
+                </h1>
+                <div className="px-2.5 py-1 rounded-full flex items-center gap-2 text-xs font-mono bg-recessed text-text-3 border border-border-subtle">
+                  <span className="text-text-2 font-semibold">Northstar Labs</span>
+                  <span>/</span>
+                  <span className="text-ember font-medium">Mobile v2</span>
+                  <ChevronDown size={12} className="text-text-3" />
+                </div>
+              </>
+            )}
           </div>
 
           {/* Element 2: Center Clean Global Search Input */}

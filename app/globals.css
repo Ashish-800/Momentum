@@ -36,11 +36,11 @@
 
 /* ── Base Default Theme (:root — Dark Mode Fallback) ─────── */
 :root {
-  --bg-0: #090B10;
-  --bg-1: #0E1117;
-  --surface: #131722;
-  --raised: #191F2E;
-  --recessed: #0B0E14;
+  --bg-0: #0B0E14;
+  --bg-1: #0E121A;
+  --surface: #131822;
+  --raised: #181E2B;
+  --recessed: #090C11;
   --border-subtle: rgba(255, 255, 255, 0.08);
   --border-strong: rgba(255, 255, 255, 0.16);
   --text-1: #F8FAFC;
@@ -57,25 +57,25 @@
   --success: #4ADE80;
   --info: #38BDF8;
 
-  --neu-raised-bg: #131722;
-  --neu-raised-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  --neu-raised-sm-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --neu-raised-bg: linear-gradient(145deg, #181E2B, #10141D);
+  --neu-raised-shadow: 9px 9px 20px #06080B, -6px -6px 16px #1E2638, inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --neu-raised-sm-shadow: 5px 5px 12px #06080B, -4px -4px 10px #1E2638;
 
-  --neu-inset-bg: #0B0E14;
-  --neu-inset-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
+  --neu-inset-bg: #090C11;
+  --neu-inset-shadow: inset 5px 5px 12px #05070A, inset -4px -4px 10px #171D2A;
 
-  --neu-border: rgba(255, 255, 255, 0.08);
+  --neu-border: rgba(255, 255, 255, 0.06);
   color-scheme: dark;
 }
 
 /* ── Explicit Dark Theme ───────────────────────────────────── */
 [data-theme="dark"],
 .dark {
-  --bg-0: #090B10;
-  --bg-1: #0E1117;
-  --surface: #131722;
-  --raised: #191F2E;
-  --recessed: #0B0E14;
+  --bg-0: #0B0E14;
+  --bg-1: #0E121A;
+  --surface: #131822;
+  --raised: #181E2B;
+  --recessed: #090C11;
   --border-subtle: rgba(255, 255, 255, 0.08);
   --border-strong: rgba(255, 255, 255, 0.16);
   --text-1: #F8FAFC;
@@ -92,18 +92,18 @@
   --success: #4ADE80;
   --info: #38BDF8;
 
-  --neu-raised-bg: #131722;
-  --neu-raised-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  --neu-raised-sm-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --neu-raised-bg: linear-gradient(145deg, #181E2B, #10141D);
+  --neu-raised-shadow: 9px 9px 20px #06080B, -6px -6px 16px #1E2638, inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --neu-raised-sm-shadow: 5px 5px 12px #06080B, -4px -4px 10px #1E2638;
 
-  --neu-inset-bg: #0B0E14;
-  --neu-inset-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
+  --neu-inset-bg: #090C11;
+  --neu-inset-shadow: inset 5px 5px 12px #05070A, inset -4px -4px 10px #171D2A;
 
-  --neu-border: rgba(255, 255, 255, 0.08);
+  --neu-border: rgba(255, 255, 255, 0.06);
   color-scheme: dark;
 }
 
-/* ── Light Theme (Crisp Daylight — Clean Cool Alabaster) ──── */
+/* ── Light Theme (Sculpted Porcelain Soft-UI) ─────────────── */
 /* Strictly declared AFTER dark theme with !important & high specificity */
 :root[data-theme="light"],
 html[data-theme="light"],
@@ -111,13 +111,13 @@ html.light,
 body[data-theme="light"],
 [data-theme="light"],
 .light {
-  --bg-0: #F8FAFC !important;
-  --bg-1: #FFFFFF !important;
-  --surface: #FFFFFF !important;
+  --bg-0: #EAECEF !important;
+  --bg-1: #EFF1F5 !important;
+  --surface: #EFF1F5 !important;
   --raised: #FFFFFF !important;
-  --recessed: #F1F5F9 !important;
-  --border-subtle: #E2E8F0 !important;
-  --border-strong: #CBD5E1 !important;
+  --recessed: #E2E5EC !important;
+  --border-subtle: rgba(255, 255, 255, 0.7) !important;
+  --border-strong: #C8CDD6 !important;
   --text-1: #0F172A !important;
   --text-2: #334155 !important;
   --text-3: #475569 !important;
@@ -132,14 +132,14 @@ body[data-theme="light"],
   --success: #16A34A !important;
   --info: #0284C7 !important;
 
-  --neu-raised-bg: #FFFFFF !important;
-  --neu-raised-shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 4px 12px rgba(15, 23, 42, 0.04) !important;
-  --neu-raised-sm-shadow: 0 1px 2px rgba(15, 23, 42, 0.06) !important;
+  --neu-raised-bg: linear-gradient(145deg, #FFFFFF, #E6E9EF) !important;
+  --neu-raised-shadow: 8px 8px 18px #C8CDD6, -8px -8px 18px #FFFFFF, inset 0 1px 1px rgba(255, 255, 255, 0.9) !important;
+  --neu-raised-sm-shadow: 5px 5px 10px #C8CDD6, -5px -5px 10px #FFFFFF !important;
 
-  --neu-inset-bg: #F1F5F9 !important;
-  --neu-inset-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.06) !important;
+  --neu-inset-bg: #E2E5EC !important;
+  --neu-inset-shadow: inset 5px 5px 10px #C5C9D2, inset -5px -5px 10px #FFFFFF !important;
 
-  --neu-border: #E2E8F0 !important;
+  --neu-border: rgba(255, 255, 255, 0.7) !important;
   color-scheme: light;
 }
 
@@ -166,21 +166,21 @@ html, body {
   background: var(--neu-raised-bg);
   box-shadow: var(--neu-raised-shadow);
   border: 1px solid var(--neu-border);
-  border-radius: 16px;
+  border-radius: 20px;
 }
 
 .neu-inset {
   background: var(--neu-inset-bg);
   box-shadow: var(--neu-inset-shadow);
   border: 1px solid var(--neu-border);
-  border-radius: 12px;
+  border-radius: 14px;
 }
 
 .neu-button {
   background: var(--neu-raised-bg);
   box-shadow: var(--neu-raised-sm-shadow);
   border: 1px solid var(--neu-border);
-  border-radius: 12px;
+  border-radius: 14px;
   cursor: pointer;
   transition: transform 80ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 80ms ease, background 80ms ease;
   user-select: none;
@@ -323,18 +323,18 @@ body[data-theme="light"],
 html[data-theme="light"] body,
 .light body,
 body.light {
-  background-color: #F8FAFC !important;
+  background-color: #EAECEF !important;
   color: #0F172A !important;
 }
 
 [data-theme="light"] .bg-surface,
 .light .bg-surface {
-  background-color: #FFFFFF !important;
+  background-color: #EFF1F5 !important;
 }
 
 [data-theme="light"] .bg-recessed,
 .light .bg-recessed {
-  background-color: #F1F5F9 !important;
+  background-color: #E2E5EC !important;
 }
 
 [data-theme="light"] .bg-raised,
@@ -344,12 +344,12 @@ body.light {
 
 [data-theme="light"] .bg-bg-0,
 .light .bg-bg-0 {
-  background-color: #F8FAFC !important;
+  background-color: #EAECEF !important;
 }
 
 [data-theme="light"] .bg-bg-1,
 .light .bg-bg-1 {
-  background-color: #FFFFFF !important;
+  background-color: #EFF1F5 !important;
 }
 
 [data-theme="light"] .text-text-1,

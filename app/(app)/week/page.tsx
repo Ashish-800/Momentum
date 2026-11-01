@@ -187,9 +187,6 @@ export default function WeekPage() {
           <h1 className="font-display font-bold text-2xl lg:text-3xl text-text-1">
             My Week & <span className="font-accent text-action">Commitments</span>
           </h1>
-          <p className="text-text-3 text-xs mt-1">
-            Cross-meeting tasks with human approvals, external sync badges, and automated deadline reminders.
-          </p>
         </div>
 
         {/* View Mode Toggle */}
@@ -388,7 +385,7 @@ export default function WeekPage() {
                       </div>
 
                       {/* Title */}
-                      <div className="flex items-start gap-1.5 mb-2">
+                      <div className="flex items-start gap-1.5 mb-3">
                         {task.status === "completed" && (
                           <span className="text-emerald-600 dark:text-emerald-400 font-bold text-xs">✓</span>
                         )}
@@ -396,13 +393,6 @@ export default function WeekPage() {
                           {task.title}
                         </h4>
                       </div>
-
-                      {/* Description preview */}
-                      {task.description && (
-                        <p className="text-[11px] text-text-2 line-clamp-2 leading-relaxed mb-3 font-ui">
-                          {task.description}
-                        </p>
-                      )}
 
                       {/* Footer: Owner Avatar & Sync Tag */}
                       <div className="flex items-center justify-between pt-2 border-t border-border-subtle text-[10px] font-mono">
