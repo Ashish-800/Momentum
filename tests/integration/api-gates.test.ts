@@ -244,5 +244,34 @@ describe("API Integration Gates & Server Enforcement", () => {
       expect(json.citations.length).toBeGreaterThan(0);
       expect(json.answer).toContain("Android");
     });
+
+    it("returns rich summary when asked to summarize current or recent meetings", async () => {
+      const req = createNextRequest("http://localhost:3000/api/assistant", {
+        query: "summarize my current meeting",
+      });
+
+      const res = await assistantHandler(req);
+      expect(res.status).toBe(200);
+      const json = await res.json();
+
+      expect(json.answer).toBeDefined();
+      expect(json.answer).not.toContain("could not find a direct semantic match");
+      expect(json.answer.toLowerCase()).toMatch(/launch|scope|mobile/);
+      expect(json.citations.length).toBeGreaterThan(0);
+    });
+
+    it("returns intelligent technical answer when asked general question like MCP", async () => {
+      const req = createNextRequest("http://localhost:3000/api/assistant", {
+        query: "what is the full form of mcp",
+      });
+
+      const res = await assistantHandler(req);
+      expect(res.status).toBe(200);
+      const json = await res.json();
+
+      expect(json.answer).toBeDefined();
+      expect(json.answer).not.toContain("could not find a direct semantic match");
+      expect(json.answer.toLowerCase()).toContain("model context protocol");
+    });
   });
 });

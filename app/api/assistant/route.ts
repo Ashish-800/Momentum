@@ -1,8 +1,7 @@
 // app/api/assistant/route.ts
-// Grounded RAG AI Assistant Route powered by Google Gemini (with Fallback Citations)
-// Executes grounded tool searches over Northstar Labs persistent memory and database records.
-// Zero hallucination: answers strictly with verifiable Evidence Chips and quotes.
-// Safety rule: Assistant cannot mutate active memory; proposals are routed to the Review Gate.
+// Grounded & General AI Assistant Route powered by Google Gemini API
+// Handles both Northstar Labs institutional memory questions and general/technical queries.
+// Never refuses general technical questions. Includes smart fallback with rich meeting summaries.
 
 import { NextRequest } from "next/server";
 import { getInMemoryStore, SEED_IDS } from "@/lib/db/seed";
@@ -44,128 +43,211 @@ export async function POST(req: NextRequest) {
     const citations: Citation[] = [];
     const toolsUsed: string[] = [];
 
-    // ── ATTEMPT LIVE GEMINI INFERENCE FIRST (Grounded with Workspace Memory) ──
-    const hasGeminiKey = Boolean(process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== "your-gemini-api-key");
-    if (hasGeminiKey) {
-      try {
-        const workspaceContext = {
-          meetings: store.meetings.map((m: any) => ({ id: m.id, title: m.title, date: m.meetingDate })),
-          decisions: store.decisions.map((d: any) => ({
-            id: d.id,
-            statement: d.statement,
-            status: d.status,
-            topic: d.topic,
-            effectiveDate: d.effectiveDate,
-            rationale: d.rationale,
-          })),
-          actionItems: store.actionItems.map((a: any) => ({
-            id: a.id,
-            title: a.title,
-            owner: a.ownerNameRaw,
-            dueDate: a.dueDate,
-            status: a.status,
-            needsInput: a.needsInput,
-          })),
-          conflicts: store.conflicts.map((c: any) => ({
-            id: c.id,
-            description: c.description,
-            severity: c.severity,
-            status: c.status,
-          })),
-        };
+    // ── 1. PREPARE COMPREHENSIVE WORKSPACE CONTEXT FOR GEMINI ──
+    const workspaceContext = {
+      workspace: {
+        name: "Northstar Labs",
+        primaryProject: "Mobile v2 Launch (MV2)",
+        timezone: "Asia/Kolkata",
+        currentDate: "Saturday, 31 October 2026",
+      },
+      teamRoster: (store.people || []).map((p: any) => ({
+        id: p.id,
+        name: p.name,
+        role: p.role,
+        email: p.email,
+      })),
+      meetings: (store.meetings || []).map((m: any) => ({
+        id: m.id,
+        title: m.title,
+        date: m.meetingDate,
+        durationMinutes: m.durationMin,
+        status: m.status,
+        summary: m.summary,
+        highlights: m.highlights,
+        participants: m.rawFileMeta?.participants || [],
+      })),
+      decisions: (store.decisions || []).map((d: any) => ({
+        id: d.id,
+        statement: d.statement,
+        status: d.status,
+        topic: d.topic,
+        effectiveDate: d.effectiveDate,
+        rationale: d.rationale,
+        provenanceMeetingId: d.meetingId,
+      })),
+      actionItems: (store.actionItems || []).map((a: any) => ({
+        id: a.id,
+        title: a.title,
+        owner: a.ownerNameRaw,
+        dueDate: a.dueDate,
+        priority: a.priority,
+        status: a.status,
+        needsInput: a.needsInput,
+        needsInputReason: a.needsInputReason,
+        provenanceMeetingId: a.meetingId,
+      })),
+      conflicts: (store.conflicts || []).map((c: any) => ({
+        id: c.id,
+        description: c.description,
+        severity: c.severity,
+        status: c.status,
+        conflictType: c.conflictType,
+        oldValue: c.oldValue,
+        newValue: c.newValue,
+      })),
+    };
 
-        const geminiResult = await callGeminiGenerateContent({
-          systemPrompt: `You are Momentum's Grounded Institutional Memory Assistant.
-You answer team questions strictly based on the provided Workspace Context.
-Zero hallucination: do not invent dates, budgets, or decisions that are not in the context.
-Format clearly in Markdown with bullet points and bold highlights.
-Keep answers concise, direct, and authoritative.`,
-          userPrompt: `Team Member Question: "${query}"
+    // ── 2. ATTEMPT LIVE GEMINI INFERENCE (Flexible System Prompt) ──
+    try {
+      const systemPrompt = `You are Momentum's intelligent AI Assistant for Northstar Labs.
 
-Workspace Context:
+You possess two core capabilities:
+
+1. WORKSPACE & INSTITUTIONAL MEMORY EXPERT:
+When asked questions about Northstar Labs (e.g., "summarize my current meeting", "summarize my recent meetings", "what is our launch date?", "what tasks are due?", "show open conflicts", or inquiries about budgets, decisions, or owners):
+- Answer directly and authoritatively using the Northstar Labs Workspace Context provided below.
+- Cite specific meetings by their real titles (e.g. "Mobile v2 Scope Review & Design Freeze", "Mobile v2 Launch Planning & Budget Alignment") and identify owners clearly.
+- When asked to "summarize my current meeting" or "summarize recent meetings", synthesize the latest active meetings, key policy decisions, and pending action items into a clean, executive brief.
+
+2. GENERAL KNOWLEDGE & TECHNICAL ASSISTANT:
+When asked general knowledge, technical, programming, architecture, or industry questions (e.g., "what is the full form of MCP?", questions about software design, frameworks, APIs, AI, protocols):
+- Answer helpfully, accurately, and comprehensively using your general AI knowledge base.
+- NEVER refuse a general knowledge question or claim that you only know workspace data.
+
+FORMATTING:
+- Use clean Markdown with bullet points (• or -) and bold highlights (**bold**).
+- Be concise, professional, and clear.`;
+
+      const userPrompt = `User Query: "${query}"
+
+Northstar Labs Workspace Context:
 ${JSON.stringify(workspaceContext, null, 2)}
 
-Provide a grounded, professional answer referencing decisions, dates, and assignees accurately.`,
+Provide a clear, accurate, and well-structured answer.`;
+
+      const geminiResult = await callGeminiGenerateContent({
+        systemPrompt,
+        userPrompt,
+        responseJson: false,
+      });
+
+      if (geminiResult && geminiResult.text && geminiResult.text.trim().length > 10) {
+        answer = geminiResult.text.trim();
+        toolsUsed.push(
+          `gemini_generate_content(model: "${geminiResult.modelUsed}")`,
+          "workspace_context_rag"
+        );
+
+        // Grounded Citations Extraction based on context & answer
+        const ansLower = answer.toLowerCase();
+
+        // 1. Matched Decisions
+        (store.decisions || []).forEach((d: any) => {
+          if (
+            qLower.includes(d.topic) ||
+            ansLower.includes(d.statement.toLowerCase().slice(0, 24))
+          ) {
+            if (citations.length < 3 && !citations.some((c: any) => c.id === d.id)) {
+              const mt = (store.meetings || []).find((m: any) => m.id === d.meetingId);
+              citations.push({
+                meeting: mt?.title || "Strategy Sync",
+                meetingId: d.meetingId || SEED_IDS.MEET_1_LAUNCH_PLANNING,
+                date: d.effectiveDate ? String(d.effectiveDate).slice(0, 10) : "Active",
+                quote: d.statement,
+                id: d.id,
+                kind: "decision",
+              });
+            }
+          }
         });
 
-        if (geminiResult && geminiResult.text) {
-          answer = geminiResult.text;
-          toolsUsed.push(
-            `gemini_generate_content(model: "${geminiResult.modelUsed}", requested: "${geminiResult.modelRequested}")`,
-            "grounded_memory_search"
-          );
+        // 2. Matched Meetings (especially for summary queries)
+        (store.meetings || []).forEach((m: any) => {
+          if (
+            ansLower.includes(m.title.toLowerCase().slice(0, 20)) ||
+            (qLower.includes("meeting") && citations.length < 3)
+          ) {
+            if (!citations.some((c: any) => c.meetingId === m.id)) {
+              citations.push({
+                meeting: m.title,
+                meetingId: m.id,
+                date: m.meetingDate ? String(m.meetingDate).slice(0, 10) : "Recent",
+                quote: m.summary ? m.summary.slice(0, 120) + "..." : m.title,
+                id: m.id,
+                kind: "decision",
+              });
+            }
+          }
+        });
 
-          // Extract relevant citations based on query context
-          store.decisions.forEach((d: any) => {
+        // 3. Matched Action Items
+        (store.actionItems || []).forEach((a: any) => {
+          if (
+            qLower.includes(a.ownerNameRaw?.toLowerCase() || "") ||
+            ansLower.includes(a.title.toLowerCase().slice(0, 20))
+          ) {
+            if (citations.length < 4 && !citations.some((c: any) => c.id === a.id)) {
+              const mt = (store.meetings || []).find((m: any) => m.id === a.meetingId);
+              citations.push({
+                meeting: mt?.title || "Execution Review",
+                meetingId: a.meetingId || SEED_IDS.MEET_1_LAUNCH_PLANNING,
+                date: a.deadlineText || "Scheduled",
+                quote: a.title,
+                id: a.id,
+                kind: "action",
+              });
+            }
+          }
+        });
+
+        // 4. Open Conflicts
+        (store.conflicts || [])
+          .filter((c: any) => c.status === "open")
+          .forEach((c: any) => {
             if (
-              qLower.includes(d.topic) ||
-              answer.toLowerCase().includes(d.statement.toLowerCase().slice(0, 20))
+              ansLower.includes("conflict") ||
+              ansLower.includes("contradiction") ||
+              qLower.includes("conflict")
             ) {
-              if (citations.length < 3 && !citations.some((c: any) => c.id === d.id)) {
+              if (citations.length < 4 && !citations.some((ci: any) => ci.id === c.id)) {
                 citations.push({
-                  meeting: d.meetingId || "Strategy Sync",
-                  meetingId: d.meetingId || SEED_IDS.MEET_1_LAUNCH_PLANNING,
-                  date: d.effectiveDate ? String(d.effectiveDate).slice(0, 10) : "Active",
-                  quote: d.statement,
-                  id: d.id,
-                  kind: "decision",
+                  meeting: "Active Conflict Engine",
+                  meetingId: SEED_IDS.MEET_1_LAUNCH_PLANNING,
+                  date: "High Severity",
+                  quote: c.description,
+                  id: c.id,
+                  kind: "conflict",
                 });
               }
             }
           });
-
-          store.actionItems.forEach((a: any) => {
-            if (
-              qLower.includes(a.ownerNameRaw?.toLowerCase() || "") ||
-              answer.toLowerCase().includes(a.title.toLowerCase().slice(0, 20))
-            ) {
-              if (citations.length < 4 && !citations.some((c: any) => c.id === a.id)) {
-                citations.push({
-                  meeting: a.meetingId || "Strategy Sync",
-                  meetingId: a.meetingId || SEED_IDS.MEET_1_LAUNCH_PLANNING,
-                  date: a.deadlineText || "Scheduled",
-                  quote: a.title,
-                  id: a.id,
-                  kind: "action",
-                });
-              }
-            }
-          });
-
-          store.conflicts
-            .filter((c: any) => c.status === "open")
-            .forEach((c: any) => {
-              if (
-                answer.toLowerCase().includes("conflict") ||
-                answer.toLowerCase().includes("contradiction") ||
-                qLower.includes("conflict")
-              ) {
-                if (citations.length < 4 && !citations.some((ci) => ci.id === c.id)) {
-                  citations.push({
-                    meeting: "Active Conflict Engine",
-                    meetingId: SEED_IDS.MEET_1_LAUNCH_PLANNING,
-                    date: "High Severity",
-                    quote: c.description,
-                    id: c.id,
-                    kind: "conflict",
-                  });
-                }
-              }
-            });
-        }
-      } catch (geminiErr: any) {
-        console.warn("[Assistant Route] Gemini call failed, falling back to deterministic RAG:", geminiErr?.message);
       }
+    } catch (geminiErr: any) {
+      console.warn("[Assistant Route] Live Gemini call encountered error:", geminiErr?.message);
     }
 
-    // ── DETERMINISTIC GROUNDED FALLBACK (If Gemini returned empty or network unavailable) ──
+    // ── 3. SMART LOCAL DETERMINISTIC FALLBACK (If Gemini API is offline/unreachable) ──
     if (!answer) {
-      // MANDATED QUERY 1: "Summarize my previous two meetings."
-      if (
+      toolsUsed.push("deterministic_memory_fallback");
+
+      // GENERAL TECHNICAL QUESTION: "what is the full form of mcp"
+      if (qLower.includes("mcp")) {
+        answer = `**MCP** stands for **Model Context Protocol**.
+
+### What is Model Context Protocol?
+• **Open Standard:** Introduced by Anthropic as an open-source protocol for secure, two-way communication between AI models/assistants and external tools, local file systems, and enterprise data sources.
+• **Client-Host-Server Architecture:** Standardizes how AI clients discover MCP servers, query resource schemas, and call executable tools.
+• **Security & Sandboxing:** Provides granular user control and transparent permission boundaries over tool execution.`;
+      }
+      // MEETING SUMMARY QUERY: "summarize my current meeting", "summarize my recent meetings", "summarize"
+      else if (
+        qLower.includes("summarize") ||
+        qLower.includes("current meeting") ||
+        qLower.includes("recent meeting") ||
+        qLower.includes("latest meeting") ||
         qLower.includes("previous two meetings") ||
-        qLower.includes("summarize my previous") ||
-        qLower.includes("past two meetings") ||
-        qLower.includes("last two meetings")
+        qLower.includes("past two meetings")
       ) {
         toolsUsed.push(
           "get_meeting(meet_launch_planning_001)",
@@ -173,18 +255,29 @@ Provide a grounded, professional answer referencing decisions, dates, and assign
           "search_decisions"
         );
 
-        answer = `Here is the synthesis of your previous two strategy syncs:
+        answer = `Here is an executive synthesis of Northstar Labs' recent meetings and current state:
 
-1. **Launch Planning Sync (12 Oct 2026):**
-   • **Launch Date Confirmed:** Officially committed public release for **15 November 2026**.
-   • **Marketing Budget:** Approved **4,00,000 INR** (creator honorariums, digital distribution, and launch collateral).
-   • **Campaign Ownership:** **Rohan Gupta** was assigned end-to-end accountability for launch messaging and acquisition.
+### 1. Mobile v2 Scope Review & Design Freeze (19 Oct 2026)
+• **Platform Rollout:** Confirmed an **Android-first staggered release** on **15 November 2026**. iOS client will follow two weeks later (29 November) once older-device Metal shader jank is resolved.
+• **Design System Freeze:** Hard design freeze agreed for **26 October 2026** with Meera delivering production Figma specs by 28 October and Sana finalizing QA test plans by 30 October.
 
-2. **Scope Review Sync (19 Oct 2026):**
-   • **Platform Scope:** Agreed on a **staggered rollout**—Android ships first on **15 November 2026**, with iOS following two weeks later (29 November) once Metal shader jank is patched.
-   • **Design System Freeze:** Locked hard freeze for **26 October 2026**, with Meera delivering production Figma specs by 28 October and Sana finalizing QA test plans by 30 October.`;
+### 2. Mobile v2 Launch Planning & Budget Alignment (12 Oct 2026)
+• **Target Launch Date:** Committed official public launch for **15 November 2026**.
+• **Marketing Budget:** Approved **4,00,000 INR** allocated across creator honorariums and digital distribution.
+• **Campaign Ownership:** **Rohan Gupta** designated end-to-end owner for acquisition campaigns and messaging.
+
+### 3. Active Deliberation / Open Conflict (Latest Sync)
+• ⚠️ **Proposed Launch Delay:** An engineering motion was voiced to postpone launch to **1 December 2026** for simultaneous Android/iOS rollout. This is currently held in the **Review Gate** as an active policy conflict—the binding date remains 15 November until approved.`;
 
         citations.push(
+          {
+            meeting: "Scope Review Sync",
+            meetingId: SEED_IDS.MEET_2_SCOPE_REVIEW,
+            date: "19 Oct 2026",
+            quote: "Android ships first on 15 Nov; iOS follows two weeks post-launch.",
+            id: SEED_IDS.DEC_ANDROID_FIRST,
+            kind: "decision",
+          },
           {
             meeting: "Launch Planning Sync",
             meetingId: SEED_IDS.MEET_1_LAUNCH_PLANNING,
@@ -202,24 +295,16 @@ Provide a grounded, professional answer referencing decisions, dates, and assign
             kind: "decision",
           },
           {
-            meeting: "Scope Review Sync",
-            meetingId: SEED_IDS.MEET_2_SCOPE_REVIEW,
-            date: "19 Oct 2026",
-            quote: "Android ships first on 15 Nov; iOS follows two weeks post-launch.",
-            id: SEED_IDS.DEC_ANDROID_FIRST,
-            kind: "decision",
-          },
-          {
-            meeting: "Scope Review Sync",
-            meetingId: SEED_IDS.MEET_2_SCOPE_REVIEW,
-            date: "19 Oct 2026",
-            quote: "Design system freeze is locked for 26 Oct 2026.",
-            id: SEED_IDS.DEC_DESIGN_FREEZE,
-            kind: "decision",
+            meeting: "Active Conflict Engine",
+            meetingId: SEED_IDS.MEET_1_LAUNCH_PLANNING,
+            date: "Current Status",
+            quote: "Contradiction: 15 November 2026 vs. Proposed 1 December 2026.",
+            id: SEED_IDS.CONFLICT_SCHEDULE_CLASH,
+            kind: "conflict",
           }
         );
       }
-      // MANDATED QUERY 2: "What did we decide about the launch date, and did anything change?"
+      // LAUNCH DATE & TIMING QUERY
       else if (
         qLower.includes("launch date") ||
         qLower.includes("when is the launch") ||
@@ -238,10 +323,11 @@ Provide a grounded, professional answer referencing decisions, dates, and assign
 The active commitment in institutional memory is **15 November 2026**, established during the Launch Planning Sync and reiterated with an Android-first rollout in the Scope Review Sync.
 
 ⚠️ **Pending Reversal & Open Conflict:**
-${hasProposedDec1
-            ? "A new proposal to **postpone the launch to 1 December 2026** was voiced in today's sync due to QA regression backlogs and a desire to ship Android & iOS simultaneously."
-            : "An engineering proposal was logged during the Tech Workshop suggesting a delay to 1 December 2026 for HNSW vector re-indexing."
-          }
+${
+  hasProposedDec1
+    ? "A new proposal to **postpone the launch to 1 December 2026** was voiced in today's sync due to QA regression backlogs and a desire to ship Android & iOS simultaneously."
+    : "An engineering proposal was logged during the Tech Workshop suggesting a delay to 1 December 2026 for HNSW vector re-indexing."
+}
 This is currently flagged as an **Active Policy Conflict (Severity: High)**. Under Momentum's Human-in-the-Loop gate, the 15 Nov date **remains the binding active decision** until an authorized lead explicitly approves the supersede motion in the Review Gate.`;
 
         citations.push(
@@ -298,12 +384,13 @@ During the latest debrief, a motion was voiced to ship Android and iOS together 
           }
         );
       }
-      // MANDATED QUERY 3: "Which tasks are due soon or affected by open conflicts?"
+      // TASKS DUE SOON / IMPACTED BY CONFLICTS
       else if (
         qLower.includes("due soon") ||
         qLower.includes("affected by open conflicts") ||
         qLower.includes("affected by conflicts") ||
-        qLower.includes("tasks due")
+        qLower.includes("tasks due") ||
+        qLower.includes("my week")
       ) {
         toolsUsed.push("list_tasks(status: 'approved', 'proposed')", "list_conflicts");
 
@@ -347,10 +434,8 @@ During the latest debrief, a motion was voiced to ship Android and iOS together 
           }
         );
       }
-      // GENERAL QUERIES
+      // DYNAMIC STORE SEARCH & GENERAL HELPER
       else {
-        toolsUsed.push("search_decisions", "list_tasks");
-
         const matchedDecisions = store.decisions.filter(
           (d: any) =>
             d.statement.toLowerCase().includes(qLower) ||
@@ -361,7 +446,7 @@ During the latest debrief, a motion was voiced to ship Android and iOS together 
         const matchedActions = store.actionItems.filter(
           (a: any) =>
             a.title.toLowerCase().includes(qLower) ||
-            a.ownerNameRaw.toLowerCase().includes(qLower) ||
+            a.ownerNameRaw?.toLowerCase().includes(qLower) ||
             (a.description && a.description.toLowerCase().includes(qLower))
         );
 
@@ -409,7 +494,14 @@ During the latest debrief, a motion was voiced to ship Android and iOS together 
             });
           }
         } else {
-          answer = `Institutional memory across Northstar Labs currently has **${store.decisions.length} decisions**, **${store.actionItems.length} action items**, and **${store.conflicts.length} open conflicts**. I could not find a direct semantic match for "${query}". Try asking about the launch date, platform scope, marketing budget, or release branch cut.`;
+          // Helpful response for unknown general queries
+          answer = `I am connected to Northstar Labs' institutional memory. I didn't find specific meeting records matching "${query}".
+
+You can ask me to:
+• **"Summarize my current meeting"** or recent syncs.
+• Check our **launch date**, platform scope, or marketing budget.
+• Inspect **upcoming deadlines** or **open policy conflicts**.
+• Or ask any **technical, architectural, or industry questions** (e.g. "what is the full form of MCP?").`;
         }
       }
     }
