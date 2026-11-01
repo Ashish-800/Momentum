@@ -16,8 +16,6 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      data-theme="dark"
-      className="dark"
       suppressHydrationWarning
     >
       <head>
@@ -39,12 +37,12 @@ export default function RootLayout({
                   }
                   var t = (saved === 'light') ? 'light' : 'dark';
                   document.documentElement.setAttribute('data-theme', t);
-                  if (t === 'light') {
-                    document.documentElement.classList.remove('dark');
-                    document.documentElement.classList.add('light');
-                  } else {
-                    document.documentElement.classList.remove('light');
-                    document.documentElement.classList.add('dark');
+                  document.documentElement.classList.remove('dark', 'light');
+                  document.documentElement.classList.add(t);
+                  if (document.body) {
+                    document.body.setAttribute('data-theme', t);
+                    document.body.classList.remove('dark', 'light');
+                    document.body.classList.add(t);
                   }
                 } catch(e) {}
               })();
@@ -52,7 +50,10 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="font-ui antialiased bg-bg-0 text-text-1 min-h-dvh relative selection:bg-ember/25 selection:text-text-1">
+      <body
+        className="font-ui antialiased min-h-dvh relative selection:bg-ember/25 selection:text-text-1"
+        style={{ backgroundColor: "var(--bg-0)", color: "var(--text-1)" }}
+      >
         {/* Subtle 3% SVG Noise Texture Overlay */}
         <div
           className="pointer-events-none fixed inset-0 z-50 opacity-[0.035] mix-blend-overlay"

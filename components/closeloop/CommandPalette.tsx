@@ -76,6 +76,11 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
       document.body.classList.add("dark");
     }
     document.documentElement.style.colorScheme = next;
+
+    document.querySelectorAll("[data-theme]").forEach((el) => {
+      el.setAttribute("data-theme", next);
+    });
+
     try {
       localStorage.setItem("closeloop-theme", next);
       document.cookie = `closeloop-theme=${next}; path=/; max-age=31536000`;
@@ -292,7 +297,8 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
         exit={{ opacity: 0, scale: 0.96, y: -12 }}
         transition={{ duration: 0.16 }}
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-xl neu-raised border border-white/10 rounded-2xl p-4 shadow-2xl overflow-hidden bg-bg-1"
+        className="w-full max-w-xl neu-raised border border-border-subtle rounded-2xl p-4 shadow-2xl overflow-hidden"
+        style={{ backgroundColor: "var(--bg-1)", borderColor: "var(--border-subtle)", color: "var(--text-1)" }}
       >
         {/* Search Input Bar */}
         <div className="flex items-center gap-3 pb-3 border-b border-white/5">

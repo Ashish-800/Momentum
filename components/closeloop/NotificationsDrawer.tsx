@@ -73,11 +73,12 @@ export function NotificationsDrawer({
         animate={{ x: 0 }}
         exit={{ x: "100%" }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        className="w-full max-w-md h-full bg-bg-1 border-l border-white/5 neu-raised p-6 flex flex-col justify-between shadow-2xl overflow-hidden"
+        className="w-full max-w-md h-full border-l border-border-subtle neu-raised p-6 flex flex-col justify-between shadow-2xl overflow-hidden"
+        style={{ backgroundColor: "var(--bg-1)", borderColor: "var(--border-subtle)", color: "var(--text-1)" }}
       >
         <div>
           {/* Header */}
-          <div className="flex items-center justify-between pb-4 border-b border-white/5 mb-4">
+          <div className="flex items-center justify-between pb-4 border-b border-border-subtle mb-4">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-xl bg-conflict/15 border border-conflict/30 flex items-center justify-center text-conflict">
                 <Bell size={16} />

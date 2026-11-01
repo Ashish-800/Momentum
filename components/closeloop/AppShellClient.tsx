@@ -77,22 +77,21 @@ export function AppShellClient({
   function applyTheme(next: "dark" | "light") {
     setTheme(next);
     if (typeof document !== "undefined") {
+      // 1. Update <html> and <body> attributes and classes
       document.documentElement.setAttribute("data-theme", next);
       document.body.setAttribute("data-theme", next);
-
-      if (next === "light") {
-        document.documentElement.classList.remove("dark");
-        document.documentElement.classList.add("light");
-        document.body.classList.remove("dark");
-        document.body.classList.add("light");
-      } else {
-        document.documentElement.classList.remove("light");
-        document.documentElement.classList.add("dark");
-        document.body.classList.remove("light");
-        document.body.classList.add("dark");
-      }
+      document.documentElement.classList.remove("dark", "light");
+      document.documentElement.classList.add(next);
+      document.body.classList.remove("dark", "light");
+      document.body.classList.add(next);
       document.documentElement.style.colorScheme = next;
 
+      // 2. Also update any child wrapper that might have data-theme
+      document.querySelectorAll("[data-theme]").forEach((el) => {
+        el.setAttribute("data-theme", next);
+      });
+
+      // 3. Persist state
       try {
         localStorage.setItem("closeloop-theme", next);
         document.cookie = `closeloop-theme=${next}; path=/; max-age=31536000`;
@@ -134,11 +133,36 @@ export function AppShellClient({
     return () => window.removeEventListener("closeloop:theme-changed", handleExternalThemeChange);
   }, []);
 
-  function toggleTheme() {
-    const currentOnDom = document.documentElement.getAttribute("data-theme") || theme;
-    const next = currentOnDom === "dark" ? "light" : "dark";
-    applyTheme(next);
-  }
+  const toggleTheme = () => {
+    const current = document.documentElement.getAttribute("data-theme") || theme || "dark";
+    const next = current === "dark" ? "light" : "dark";
+
+    // 1. Update <html> and <body> attributes and classes
+    document.documentElement.setAttribute("data-theme", next);
+    document.body.setAttribute("data-theme", next);
+    document.documentElement.classList.remove("dark", "light");
+    document.documentElement.classList.add(next);
+    document.body.classList.remove("dark", "light");
+    document.body.classList.add(next);
+    document.documentElement.style.colorScheme = next;
+
+    // 2. Also update any child wrapper that might have data-theme
+    document.querySelectorAll("[data-theme]").forEach((el) => {
+      el.setAttribute("data-theme", next);
+    });
+
+    // 3. Persist state
+    try {
+      localStorage.setItem("closeloop-theme", next);
+      document.cookie = `closeloop-theme=${next}; path=/; max-age=31536000`;
+    } catch (e) {}
+    setTheme(next);
+
+    // 4. Dispatch event
+    window.dispatchEvent(
+      new CustomEvent("closeloop:theme-changed", { detail: { theme: next } })
+    );
+  };
 
   // Global shortcut for Cmd+K
   useEffect(() => {
@@ -165,13 +189,17 @@ export function AppShellClient({
   }
 
   return (
-    <div className="flex min-h-dvh bg-bg-0 text-text-1">
+    <div
+      className="flex min-h-dvh"
+      style={{ backgroundColor: "var(--bg-0)", color: "var(--text-1)" }}
+    >
       {/* ── Left Navigation Rail (68px wide) ──────────────────── */}
       <aside
         className={cn(
           "hidden md:flex flex-col items-center justify-between py-5 z-40 sticky top-0 h-dvh",
-          "w-[68px] border-r border-border-subtle bg-bg-1"
+          "w-[68px] border-r border-border-subtle"
         )}
+        style={{ backgroundColor: "var(--bg-1)", borderColor: "var(--border-subtle)" }}
       >
         {/* Top: Clean Geometric Brand Icon */}
         <div className="flex flex-col items-center gap-6">
@@ -271,7 +299,10 @@ export function AppShellClient({
       {/* ── Main App Content & Top Header ──────────────────── */}
       <div className="flex-1 min-w-0 flex flex-col min-h-dvh">
         {/* Top Workspace Header (ONLY 4 Clean Elements) */}
-        <header className="sticky top-0 z-30 h-16 border-b border-border-subtle bg-bg-1/95 backdrop-blur-md px-6 flex items-center justify-between gap-4">
+        <header
+          className="sticky top-0 z-30 h-16 border-b border-border-subtle backdrop-blur-md px-6 flex items-center justify-between gap-4"
+          style={{ backgroundColor: "var(--bg-1)", borderColor: "var(--border-subtle)" }}
+        >
           {/* Element 1: Left Page Title + subtle project badge */}
           <div className="flex items-center gap-3">
             <h1 className="font-display font-bold text-[18px] text-text-1 hidden sm:block">
@@ -329,12 +360,18 @@ export function AppShellClient({
           </div>
         </header>
 
-        <div className="flex-1 pb-16 md:pb-0">
+        <div
+          className="flex-1 pb-16 md:pb-0"
+          style={{ backgroundColor: "var(--bg-0)", color: "var(--text-1)" }}
+        >
           {children}
         </div>
 
         {/* Mobile Dock */}
-        <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-bg-1/95 backdrop-blur-lg border-t border-border-subtle p-2 flex items-center justify-around">
+        <div
+          className="md:hidden fixed bottom-0 left-0 right-0 z-40 backdrop-blur-lg border-t border-border-subtle p-2 flex items-center justify-around"
+          style={{ backgroundColor: "var(--bg-1)", borderColor: "var(--border-subtle)" }}
+        >
           {NAV_ITEMS.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;

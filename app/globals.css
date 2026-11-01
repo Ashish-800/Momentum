@@ -318,6 +318,65 @@ html, body {
 }
 
 /* ── Light Mode Color Adaptations for Tailwind utility fallbacks ── */
+[data-theme="light"] body,
+body[data-theme="light"],
+html[data-theme="light"] body,
+.light body,
+body.light {
+  background-color: #F8FAFC !important;
+  color: #0F172A !important;
+}
+
+[data-theme="light"] .bg-surface,
+.light .bg-surface {
+  background-color: #FFFFFF !important;
+}
+
+[data-theme="light"] .bg-recessed,
+.light .bg-recessed {
+  background-color: #F1F5F9 !important;
+}
+
+[data-theme="light"] .bg-raised,
+.light .bg-raised {
+  background-color: #FFFFFF !important;
+}
+
+[data-theme="light"] .bg-bg-0,
+.light .bg-bg-0 {
+  background-color: #F8FAFC !important;
+}
+
+[data-theme="light"] .bg-bg-1,
+.light .bg-bg-1 {
+  background-color: #FFFFFF !important;
+}
+
+[data-theme="light"] .text-text-1,
+.light .text-text-1 {
+  color: #0F172A !important;
+}
+
+[data-theme="light"] .text-text-2,
+.light .text-text-2 {
+  color: #334155 !important;
+}
+
+[data-theme="light"] .text-text-3,
+.light .text-text-3 {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .border-border-subtle,
+.light .border-border-subtle {
+  border-color: #E2E8F0 !important;
+}
+
+[data-theme="light"] .border-border-strong,
+.light .border-border-strong {
+  border-color: #CBD5E1 !important;
+}
+
 [data-theme="light"] .border-white\/5,
 [data-theme="light"] .border-white\/10,
 .light .border-white\/5,

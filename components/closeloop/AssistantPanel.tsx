@@ -124,14 +124,19 @@ export function AssistantPanel({ isOpen, onToggle }: AssistantPanelProps) {
       transition={{ type: "spring", stiffness: 260, damping: 26 }}
       className={cn(
         "h-dvh sticky top-0 flex-shrink-0 flex flex-col border-l z-30 overflow-hidden",
-        "bg-bg-1 border-white/5",
+        "border-border-subtle",
         !isOpen && "pointer-events-none"
       )}
-      style={{ width: isOpen ? 380 : 0 }}
+      style={{
+        width: isOpen ? 380 : 0,
+        backgroundColor: "var(--bg-1)",
+        borderColor: "var(--border-subtle)",
+        color: "var(--text-1)",
+      }}
     >
       <div className="w-[380px] h-full flex flex-col p-4">
         {/* Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-white/5 mb-3">
+        <div className="flex items-center justify-between pb-3 border-b border-border-subtle mb-3">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-ember/15 border border-ember/30 flex items-center justify-center">
               <Sparkles size={14} className="text-ember" />
