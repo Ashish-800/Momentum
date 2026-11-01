@@ -1,5 +1,5 @@
 // app/api/demo/seed/route.ts
-// Closeloop — Seed Reset Endpoint
+// Momentum — Seed Reset Endpoint
 // Supports both POST (idempotent reset) and GET (inspect current seed state)
 
 import { NextResponse } from "next/server";

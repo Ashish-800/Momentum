@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <!-- Left Wing & Lower Left Hook: Cyan -> Cobalt -> Indigo -->
+    <linearGradient id="fav-cyan-blue" x1="4" y1="20" x2="32" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#00D2FF"/>
+      <stop offset="55%" stop-color="#1A4BFF"/>
+      <stop offset="100%" stop-color="#3B1D9E"/>
+    </linearGradient>
+
+    <!-- Center Speed Diagonal: Sky Blue -> Royal Blue -->
+    <linearGradient id="fav-sky-blue" x1="16" y1="16" x2="38" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#2563EB"/>
+    </linearGradient>
+
+    <!-- Right Arch: Royal Blue -> Violet -> Magenta -> Orange -->
+    <linearGradient id="fav-blue-pink" x1="28" y1="16" x2="58" y2="46" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="40%" stop-color="#7C3AED"/>
+      <stop offset="75%" stop-color="#EC4899"/>
+      <stop offset="100%" stop-color="#FF5500"/>
+    </linearGradient>
+
+    <!-- Inner Right Ribbon / Flame Accent: Violet -> Hot Pink -> Orange -> Amber -->
+    <linearGradient id="fav-flame" x1="34" y1="30" x2="48" y2="54" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#7C3AED"/>
+      <stop offset="35%" stop-color="#EC4899"/>
+      <stop offset="70%" stop-color="#FF5500"/>
+      <stop offset="100%" stop-color="#FFA800"/>
+    </linearGradient>
+
+    <filter id="fav-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="#000000" flood-opacity="0.10" />
+    </filter>
+  </defs>
+
+  <!-- Standalone Rounded White Squircle (rx="22%") -->
+  <rect width="64" height="64" rx="14" fill="#FFFFFF" filter="url(#fav-shadow)"/>
+  <rect width="64" height="64" rx="14" fill="none" stroke="#E2E8F0" stroke-width="1"/>
+
+  <!-- Momentum Gradient "M" Vector -->
+  <g transform="translate(6, 7) scale(0.82)">
+    <!-- 1. Upper Left Pillar -->
+    <path
+      d="M17 14 L27 14 L24 23 L14 23 Z"
+      fill="url(#fav-cyan-blue)"
+    />
+
+    <!-- 2. Far-Left Speed Wing Slicing Horizontally -->
+    <path
+      d="M3 33 L18 28 C 24 26, 31 22, 36 14 L28 14 C 23 20, 16 24, 7 28 Z"
+      fill="url(#fav-cyan-blue)"
+    />
+
+    <!-- 3. Lower Left Base / Hook -->
+    <path
+      d="M3 47 C 8 46, 12 43, 16 38 L22 38 C 17 44, 11 48, 5 48 Z"
+      fill="url(#fav-cyan-blue)"
+    />
+
+    <!-- 4. Left Pillar Lower Segment -->
+    <polygon
+      points="17,35 24,24 29,24 21,38"
+      fill="url(#fav-cyan-blue)"
+    />
+
+    <!-- 5. Center Diagonal Speed Ribbon -->
+    <path
+      d="M19 46 L33 22 L40 22 L26 46 Z"
+      fill="url(#fav-sky-blue)"
+    />
+
+    <!-- 6. Right Outer Arch & Downward Shoulder -->
+    <path
+      d="M36 14 L49 14 C 54 14, 58 19, 56 25 L50 38 C 48 42, 45 44, 41 44 L43 38 C 45 38, 47 36, 48 33 L52 23 C 53 19, 50 17, 47 17 L38 17 Z"
+      fill="url(#fav-blue-pink)"
+    />
+
+    <!-- 7. Inner Right Swoop / Warm Flame Ribbon -->
+    <path
+      d="M38 29 C 41 24, 45 25, 45 31 C 45 37, 40 46, 37 47 C 36 43, 36 36, 38 29 Z"
+      fill="url(#fav-flame)"
+    />
+  </g>
+</svg>

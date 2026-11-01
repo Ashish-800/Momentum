@@ -131,7 +131,7 @@ export default function SettingsPage() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `closeloop-workspace-state-${Date.now()}.json`;
+    link.download = `momentum-workspace-state-${Date.now()}.json`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

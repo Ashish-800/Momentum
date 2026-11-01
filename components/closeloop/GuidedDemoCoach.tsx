@@ -121,8 +121,12 @@ export function GuidedDemoCoach({ isOpen, onClose, onOpen }: GuidedDemoCoachProp
       setIsMinimized(false);
       if (onOpen) onOpen();
     };
+    window.addEventListener("momentum:start-demo-tour", handleStartTour);
     window.addEventListener("closeloop:start-demo-tour", handleStartTour);
-    return () => window.removeEventListener("closeloop:start-demo-tour", handleStartTour);
+    return () => {
+      window.removeEventListener("momentum:start-demo-tour", handleStartTour);
+      window.removeEventListener("closeloop:start-demo-tour", handleStartTour);
+    };
   }, [onOpen]);
 
   if (!isOpen) return null;

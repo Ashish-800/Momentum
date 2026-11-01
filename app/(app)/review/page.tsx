@@ -396,7 +396,7 @@ export default function ReviewPage() {
               onChange={(e) => setSelectedProvider(e.target.value as any)}
               className="px-3 py-2 rounded-xl text-xs font-mono bg-surface border border-border-subtle text-text-1 outline-none"
             >
-              <option value="internal">Closeloop Internal Board</option>
+              <option value="internal">Momentum Internal Board</option>
               <option value="trello">Trello Board Sync</option>
             </select>
 
@@ -449,7 +449,7 @@ export default function ReviewPage() {
                 </p>
 
                 <div className="p-3 rounded-xl font-mono text-[11px] space-y-1 bg-recessed border border-border-subtle">
-                  <div>Target Destination: <span className="text-ember font-bold">{selectedProvider === "trello" ? "Trello REST API" : "Closeloop Internal Board"}</span></div>
+                  <div>Target Destination: <span className="text-ember font-bold">{selectedProvider === "trello" ? "Trello REST API" : "Momentum Internal Board"}</span></div>
                   <div>Automated Reminders: <span className="text-emerald-700 dark:text-emerald-400 font-semibold">24 Hours & 2 Hours prior to due dates</span></div>
                   <div>Audit Trail: <span className="text-text-3 font-semibold">Logged to audit_logs table</span></div>
                 </div>

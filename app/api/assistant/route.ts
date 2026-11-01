@@ -123,7 +123,7 @@ ${
     ? "A new proposal to **postpone the launch to 1 December 2026** was voiced in today's sync due to QA regression backlogs and a desire to ship Android & iOS simultaneously."
     : "An engineering proposal was logged during the Tech Workshop suggesting a delay to 1 December 2026 for HNSW vector re-indexing."
 }
-This is currently flagged as an **Active Policy Conflict (Severity: High)**. Under Closeloop's Human-in-the-Loop gate, the 15 Nov date **remains the binding active decision** until an authorized lead explicitly approves the supersede motion in the Review Gate.`;
+This is currently flagged as an **Active Policy Conflict (Severity: High)**. Under Momentum's Human-in-the-Loop gate, the 15 Nov date **remains the binding active decision** until an authorized lead explicitly approves the supersede motion in the Review Gate.`;
 
       citations.push(
         {

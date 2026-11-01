@@ -1,5 +1,5 @@
 // lib/integrations/internal.ts
-// Closeloop Internal Board Adapter
+// Momentum Internal Board Adapter
 // Built-in Postgres/in-memory task board allowing 100% standalone operation without external credentials.
 
 import {
@@ -12,7 +12,7 @@ import {
 import { getInMemoryStore } from "@/lib/db/seed";
 
 export class InternalBoardAdapter implements TaskAdapter {
-  readonly name = "Closeloop Internal Board";
+  readonly name = "Momentum Internal Board";
   readonly provider = "internal" as const;
 
   async testConnection(): Promise<{ ok: boolean; message: string }> {
@@ -69,7 +69,7 @@ export class InternalBoardAdapter implements TaskAdapter {
     return {
       success: true,
       externalRef,
-      message: "Synced to Closeloop Internal Board.",
+      message: "Synced to Momentum Internal Board.",
       raw: taskRecord,
     };
   }

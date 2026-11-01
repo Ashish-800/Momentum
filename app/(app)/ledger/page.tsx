@@ -110,7 +110,7 @@ export default function LedgerPage() {
   // Export Ledger to Markdown
   const handleExportMarkdown = () => {
     const lines: string[] = [
-      "# Closeloop Institutional Decision Ledger",
+      "# Momentum Institutional Decision Ledger",
       `**Workspace:** Northstar Labs (Mobile v2)`,
       `**Exported:** ${formatIST(new Date(), "yyyy-MM-dd HH:mm")} IST`,
       `**Total Records:** ${filteredDecisions.length}`,
@@ -141,7 +141,7 @@ export default function LedgerPage() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `closeloop-decision-ledger-${Date.now()}.md`;
+    link.download = `momentum-decision-ledger-${Date.now()}.md`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

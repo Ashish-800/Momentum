@@ -182,12 +182,12 @@ export async function cleanTranscriptWithAI({
       return validated;
     } catch (err) {
       lastError = err;
-      console.warn(`[Closeloop AI] Attempt ${attempt + 1} failed:`, err);
+      console.warn(`[Momentum AI] Attempt ${attempt + 1} failed:`, err);
     }
   }
 
   // Graceful fallback if Anthropic API fails after retries
-  console.warn("[Closeloop AI] Reverting to DEMO_FALLBACK after API retries exhausted.");
+  console.warn("[Momentum AI] Reverting to DEMO_FALLBACK after API retries exhausted.");
   const fallbackResponse = getDemoRecapFallback(rawTranscript);
 
   logAiTrace({

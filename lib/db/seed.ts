@@ -1,5 +1,5 @@
 // lib/db/seed.ts
-// Closeloop (MeetFlow AI) — Production-Grade Seed Dataset
+// Momentum — Production-Grade Seed Dataset
 // Workspace: Northstar Labs | Sim Clock: 2026-10-31T12:43:00+05:30 (IST)
 
 export const SEED_IDS = {

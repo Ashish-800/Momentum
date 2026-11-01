@@ -2,10 +2,21 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Closeloop (MeetFlow AI) — Decision-Memory & Execution Platform",
+  title: "Momentum — AI Meeting-to-Execution & Institutional Memory",
   description:
-    "Convert team conversations into structured decisions, persistent institutional memory, conflict alerts, and executed work.",
-  icons: { icon: "/favicon.ico" },
+    "Momentum converts team conversations into structured decisions, persistent institutional memory, conflict alerts, and executed work.",
+  openGraph: {
+    title: "Momentum — AI Meeting-to-Execution & Institutional Memory",
+    description:
+      "Convert team conversations into structured decisions, persistent institutional memory, conflict alerts, and executed work.",
+    siteName: "Momentum",
+    type: "website",
+  },
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({
@@ -30,9 +41,9 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
-                  var saved = localStorage.getItem('closeloop-theme');
+                  var saved = localStorage.getItem('momentum-theme');
                   if (!saved) {
-                    var m = document.cookie.match(/closeloop-theme=([^;]+)/);
+                    var m = document.cookie.match(/momentum-theme=([^;]+)/);
                     if (m) saved = m[1];
                   }
                   var t = (saved === 'light') ? 'light' : 'dark';

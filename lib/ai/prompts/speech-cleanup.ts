@@ -18,7 +18,7 @@ export function buildSpeechCleanupPrompt({
     : "- Priya Nair (Product Manager)\n- Arjun Rao (Engineering Lead)\n- Meera Shah (Design Lead)\n- Rohan Gupta (Marketing Lead)\n- Sana Khan (QA Lead)";
 
   return {
-    system: `You are the Closeloop Speech Normalization & Self-Correction Engine.
+    system: `You are the Momentum Speech Normalization & Self-Correction Engine.
 Your objective is to convert spoken meeting debriefs and round-table transcripts into clean, authoritative text while cataloging every self-correction, conversational filler strip, and off-topic digression.
 
 ### CRITICAL SECURITY INSTRUCTION:

@@ -63,7 +63,7 @@ export class TrelloAdapter implements TaskAdapter {
     }
 
     lines.push("---");
-    lines.push("### 🏛️ Closeloop Institutional Memory");
+    lines.push("### 🏛️ Momentum Institutional Memory");
 
     if (params.decisionStatement) {
       lines.push(`**Parent Decision:** ${params.decisionStatement}`);
@@ -88,7 +88,7 @@ export class TrelloAdapter implements TaskAdapter {
 
     if (params.closeloopMeetingUrl) {
       lines.push("");
-      lines.push(`🔗 [View Verbatim Meeting in Closeloop](${params.closeloopMeetingUrl})`);
+      lines.push(`🔗 [View Verbatim Meeting in Momentum](${params.closeloopMeetingUrl})`);
     }
 
     lines.push(`*Idempotency Key: ${params.idempotencyKey}*`);
@@ -105,7 +105,7 @@ export class TrelloAdapter implements TaskAdapter {
       const fallbackResult = await this.internalFallback.createTask(params);
       return {
         ...fallbackResult,
-        message: "Synced to Closeloop Internal Board (Trello not connected in /settings).",
+        message: "Synced to Momentum Internal Board (Trello not connected in /settings).",
       };
     }
 
@@ -126,7 +126,7 @@ export class TrelloAdapter implements TaskAdapter {
         const fallback = await this.internalFallback.createTask(params);
         return {
           ...fallback,
-          message: "Synced to Closeloop Internal Board (no accessible list on configured Trello board).",
+          message: "Synced to Momentum Internal Board (no accessible list on configured Trello board).",
         };
       }
 
@@ -172,7 +172,7 @@ export class TrelloAdapter implements TaskAdapter {
       const fallback = await this.internalFallback.createTask(params);
       return {
         ...fallback,
-        message: `Synced to Closeloop Internal Board (Trello error: ${err.message}).`,
+        message: `Synced to Momentum Internal Board (Trello error: ${err.message}).`,
       };
     }
   }

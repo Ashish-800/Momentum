@@ -49,7 +49,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
       if (res.ok) {
         const data = await res.json();
         window.dispatchEvent(
-          new CustomEvent("closeloop:clock-advanced", { detail: data })
+          new CustomEvent("momentum:clock-advanced", { detail: data })
         );
       }
     } catch {
@@ -82,11 +82,11 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
     });
 
     try {
-      localStorage.setItem("closeloop-theme", next);
-      document.cookie = `closeloop-theme=${next}; path=/; max-age=31536000`;
+      localStorage.setItem("momentum-theme", next);
+      document.cookie = `momentum-theme=${next}; path=/; max-age=31536000`;
     } catch (e) {}
     window.dispatchEvent(
-      new CustomEvent("closeloop:theme-changed", { detail: { theme: next } })
+      new CustomEvent("momentum:theme-changed", { detail: { theme: next } })
     );
     onClose();
   };
@@ -392,7 +392,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
             <span>↵ Select</span>
             <span>ESC Dismiss</span>
           </div>
-          <span>Closeloop Global Gateway</span>
+          <span>Momentum Command Palette</span>
         </div>
       </motion.div>
     </div>

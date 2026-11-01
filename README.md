@@ -1,4 +1,4 @@
-# Closeloop (MeetFlow AI)
+# Momentum
 ### Production-Grade AI Meeting-to-Execution & Institutional Memory Platform
 
 > **Tactile Neumorphic Design System ("Tactile Obsidian & Ember") · Real Cross-Meeting Intelligence · Voice-First (Wispr Flow) · Zero-Hallucination Execution Loop**
@@ -18,9 +18,9 @@
 
 Traditional meeting transcription tools (Otter, Fireflies, Fathom, etc.) produce long, unstructured text transcripts and superficial summaries that immediately get lost in Slack channels or Notion pages. Nobody acts on them, commitments slip through the cracks, and conflicting decisions made across different meetings remain undetected until launch week.
 
-**Closeloop** is an active **decision-memory and execution system**—not a passive transcript summarizer.
+**Momentum** is an active **decision-memory and execution system**—not a passive transcript summarizer.
 
-Built with Apple- and Linear-level craft, Closeloop converts conversational voice debriefs and multi-speaker round-tables into:
+Built with Apple- and Linear-level craft, Momentum converts conversational voice debriefs and multi-speaker round-tables into:
 1. **Epistemically Rigorous Intelligence:** Distinguishes casual exploratory debate from binding decisions, confirmed milestones, and action items.
 2. **Persistent Cross-Meeting Memory:** Maintains a continuous lineage graph of organizational decisions (`supersedes_id`) powered by vector embeddings.
 3. **Hybrid Conflict Detection Engine:** Automatically flags contradictions in launch dates, platform scopes, budgets, and ownership across meetings before commitments are broken.
@@ -113,7 +113,7 @@ Every single capability is implemented with zero compromises and empirically val
 
 ## 4. Tactile Obsidian & Ember Design System
 
-Closeloop features a custom **Tactile Neumorphic Physics** design system built for high-velocity executive triage:
+Momentum features a custom **Tactile Neumorphic Physics** design system built for high-velocity executive triage:
 
 ### Visual Surface Tokens
 - **Dark Theme (Default — "Obsidian Soft Clay"):**
@@ -155,14 +155,14 @@ Closeloop features a custom **Tactile Neumorphic Physics** design system built f
 
 ## 5. Built with Voice (Wispr Flow) Workflow Guide
 
-Closeloop was engineered from the ground up for **voice-driven meeting debriefs** using **Wispr Flow**:
+Momentum was engineered from the ground up for **voice-driven meeting debriefs** using **Wispr Flow**:
 
 1. **Open Voice Studio (`/studio`)**:
    - The tactile 3D Voice Orb sits at an idle breathing frequency (0.6 Hz).
 2. **Dictate via Wispr Flow**:
    - Speak naturally: *"We just wrapped our launch sync. Um, so basically our public launch is moved to December 1st, no sorry, December 1st is final. Arjun will cut the release candidate by next Thursday."*
 3. **Instant Velocity Reactivity**:
-   - As Wispr Flow inserts text bursts into the capture stage, Closeloop computes real-time character insertion velocity (CPS).
+   - As Wispr Flow inserts text bursts into the capture stage, Momentum computes real-time character insertion velocity (CPS).
    - The 3D Ferrofluid Orb accelerates, blooms with ember light, and ripples in sync with your speech rhythm.
 4. **Deterministic Speech Cleanup (Stage 1)**:
    - Removes conversational fillers (*"um"*, *"basically"*).
@@ -175,7 +175,7 @@ Closeloop was engineered from the ground up for **voice-driven meeting debriefs*
 
 ## 6. Getting Started & Running Locally
 
-Closeloop is completely **zero-configuration ready**. The application runs out of the box with an in-memory mutable store initialized with Northstar Labs' complete 9-meeting dataset.
+Momentum is completely **zero-configuration ready**. The application runs out of the box with an in-memory mutable store initialized with Northstar Labs' complete 9-meeting dataset.
 
 ### Prerequisites
 - Node.js 20+
@@ -300,7 +300,7 @@ Follow this step-by-step walkthrough to experience the entire closed-loop workfl
 
 ## 8. Test Suite & Evaluation Results
 
-Closeloop has been verified with a comprehensive testing matrix:
+Momentum has been verified with a comprehensive testing matrix:
 
 ```bash
 # Execute Vitest Suite
@@ -406,6 +406,6 @@ meetflow-ai/
 
 ## 10. License & Credits
 
-Built with precision by the **Closeloop Engineering Team**.  
+Built with precision by the **Momentum Engineering Team**.  
 Designed with Apple & Linear level craft: Tactile Obsidian & Ember, Neumorphic Depth, and Spatial Motion.
 Distributed under the MIT License.

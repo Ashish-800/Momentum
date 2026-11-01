@@ -1,5 +1,5 @@
 // lib/db/schema.ts
-// Closeloop — Drizzle ORM + pgvector Schema
+// Momentum — Drizzle ORM + pgvector Schema
 // All timestamps stored in UTC; displayed in Asia/Kolkata (IST)
 
 import {

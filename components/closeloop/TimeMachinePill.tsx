@@ -52,6 +52,7 @@ export function TimeMachinePill({
         if (onAdvance) {
           await onAdvance(jump);
         }
+        window.dispatchEvent(new CustomEvent("momentum:clock-advanced", { detail: data }));
         window.dispatchEvent(new CustomEvent("closeloop:clock-advanced", { detail: data }));
         setLastNotification(
           `Clock advanced to ${format(toZonedTime(new Date(data.simNow), IST), "d MMM, HH:mm")} IST (${data.firedRemindersCount} fired reminders)`

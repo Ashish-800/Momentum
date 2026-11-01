@@ -23,6 +23,7 @@ import { CommandPalette } from "@/components/closeloop/CommandPalette";
 import { TimeMachinePill } from "@/components/closeloop/TimeMachinePill";
 import { NotificationsDrawer } from "@/components/closeloop/NotificationsDrawer";
 import { GuidedDemoCoach } from "@/components/closeloop/GuidedDemoCoach";
+import { MomentumLogo } from "@/components/ui/MomentumLogo";
 import { DEMO_SEED_DATA } from "@/lib/db/seed";
 import { cn } from "@/lib/utils";
 
@@ -69,8 +70,12 @@ export function AppShellClient({
       fetchUnread();
     };
 
+    window.addEventListener("momentum:clock-advanced", handleClockAdvanced);
     window.addEventListener("closeloop:clock-advanced", handleClockAdvanced);
-    return () => window.removeEventListener("closeloop:clock-advanced", handleClockAdvanced);
+    return () => {
+      window.removeEventListener("momentum:clock-advanced", handleClockAdvanced);
+      window.removeEventListener("closeloop:clock-advanced", handleClockAdvanced);
+    };
   }, []);
 
   // Apply theme to DOM and persist
@@ -93,12 +98,12 @@ export function AppShellClient({
 
       // 3. Persist state
       try {
-        localStorage.setItem("closeloop-theme", next);
-        document.cookie = `closeloop-theme=${next}; path=/; max-age=31536000`;
+        localStorage.setItem("momentum-theme", next);
+        document.cookie = `momentum-theme=${next}; path=/; max-age=31536000`;
       } catch (e) {}
 
       window.dispatchEvent(
-        new CustomEvent("closeloop:theme-changed", { detail: { theme: next } })
+        new CustomEvent("momentum:theme-changed", { detail: { theme: next } })
       );
     }
   }
@@ -106,9 +111,13 @@ export function AppShellClient({
   // Initialize theme from document or localStorage
   useEffect(() => {
     try {
-      let saved = localStorage.getItem("closeloop-theme") as "dark" | "light" | null;
+      let saved = localStorage.getItem("momentum-theme") as "dark" | "light" | null;
       if (!saved) {
-        const m = document.cookie.match(/closeloop-theme=([^;]+)/);
+        // Also migrate from old closeloop-theme key
+        saved = localStorage.getItem("closeloop-theme") as "dark" | "light" | null;
+      }
+      if (!saved) {
+        const m = document.cookie.match(/momentum-theme=([^;]+)/);
         if (m && (m[1] === "dark" || m[1] === "light")) {
           saved = m[1] as "dark" | "light";
         }
@@ -129,8 +138,8 @@ export function AppShellClient({
       }
     };
 
-    window.addEventListener("closeloop:theme-changed", handleExternalThemeChange);
-    return () => window.removeEventListener("closeloop:theme-changed", handleExternalThemeChange);
+    window.addEventListener("momentum:theme-changed", handleExternalThemeChange);
+    return () => window.removeEventListener("momentum:theme-changed", handleExternalThemeChange);
   }, []);
 
   const toggleTheme = () => {
@@ -153,14 +162,14 @@ export function AppShellClient({
 
     // 3. Persist state
     try {
-      localStorage.setItem("closeloop-theme", next);
-      document.cookie = `closeloop-theme=${next}; path=/; max-age=31536000`;
+      localStorage.setItem("momentum-theme", next);
+      document.cookie = `momentum-theme=${next}; path=/; max-age=31536000`;
     } catch (e) {}
     setTheme(next);
 
     // 4. Dispatch event
     window.dispatchEvent(
-      new CustomEvent("closeloop:theme-changed", { detail: { theme: next } })
+      new CustomEvent("momentum:theme-changed", { detail: { theme: next } })
     );
   };
 
@@ -185,7 +194,7 @@ export function AppShellClient({
     if (pathname.startsWith("/digest")) return "Personalized Weekly Digest";
     if (pathname.startsWith("/settings")) return "Workspace Settings";
     if (pathname.startsWith("/meetings")) return "Meeting Detail & Analysis";
-    return "Closeloop";
+    return "Momentum";
   }
 
   return (
@@ -201,17 +210,14 @@ export function AppShellClient({
         )}
         style={{ backgroundColor: "var(--bg-1)", borderColor: "var(--border-subtle)" }}
       >
-        {/* Top: Clean Geometric Brand Icon */}
+        {/* Top: Momentum Brand Logo */}
         <div className="flex flex-col items-center gap-6">
           <Link
             href="/home"
-            className="w-10 h-10 flex items-center justify-center rounded-xl bg-ember/10 border border-ember/30 group hover:border-ember transition-colors"
-            title="Closeloop (MeetFlow AI)"
+            title="Momentum — Command Center"
+            className="block rounded-xl transition-all hover:opacity-90 hover:scale-105 active:scale-95"
           >
-            <div className="relative w-5 h-5 flex items-center justify-center">
-              <div className="absolute inset-0 rounded-md border-2 border-ember rotate-45 group-hover:rotate-90 transition-transform duration-300" />
-              <div className="w-2 h-2 rounded-full bg-ember" />
-            </div>
+            <MomentumLogo variant="icon" size={42} />
           </Link>
 
           {/* 6 Clean Navigation Items */}
@@ -303,8 +309,21 @@ export function AppShellClient({
           className="sticky top-0 z-30 h-16 border-b border-border-subtle backdrop-blur-md px-6 flex items-center justify-between gap-4"
           style={{ backgroundColor: "var(--bg-1)", borderColor: "var(--border-subtle)" }}
         >
-          {/* Element 1: Left Page Title + subtle project badge */}
+          {/* Element 1: Left Page Title + Momentum brand badge + project context */}
           <div className="flex items-center gap-3">
+            {/* Momentum wordmark — subtle brand reinforcement in header */}
+            <span
+              className="hidden lg:block font-black italic text-sm tracking-tight leading-none flex-shrink-0"
+              style={{
+                background: "linear-gradient(90deg, #1A4BFF 0%, #7C3AED 60%, #EC4899 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                letterSpacing: "-0.03em",
+              }}
+            >
+              Momentum
+            </span>
             <h1 className="font-display font-bold text-[18px] text-text-1 hidden sm:block">
               {getPageTitle()}
             </h1>

@@ -76,7 +76,10 @@ export default function HomePage() {
         {/* Action Controls */}
         <div className="flex items-center gap-3">
           <button
-            onClick={() => window.dispatchEvent(new CustomEvent("closeloop:start-demo-tour"))}
+            onClick={() => {
+              window.dispatchEvent(new CustomEvent("momentum:start-demo-tour"));
+              window.dispatchEvent(new CustomEvent("closeloop:start-demo-tour"));
+            }}
             className="btn-primary px-4 py-2.5 rounded-xl flex items-center gap-2 text-xs font-mono font-bold cursor-pointer"
           >
             <Sparkles size={14} className="text-white" />

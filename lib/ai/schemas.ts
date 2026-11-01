@@ -1,5 +1,5 @@
 // lib/ai/schemas.ts
-// Closeloop AI Pipeline — Complete Schemas (Stages 1–6 & RAG Assistant)
+// Momentum AI Pipeline — Complete Schemas (Stages 1–6 & RAG Assistant)
 
 import { z } from "zod";
 

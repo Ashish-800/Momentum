@@ -9,7 +9,7 @@ const connectionString = process.env.DATABASE_URL;
 
 if (!connectionString) {
   console.warn(
-    "[Closeloop DB] DATABASE_URL not set — running in DEMO_MODE (in-memory fallback only)"
+    "[Momentum DB] DATABASE_URL not set — running in DEMO_MODE (in-memory fallback only)"
   );
 }
 
