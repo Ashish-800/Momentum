@@ -49,8 +49,8 @@ export async function POST(req: NextRequest) {
     if (hasGeminiKey) {
       try {
         const workspaceContext = {
-          meetings: (store.meetings || []).map((m: any) => ({ id: m.id, title: m.title, date: m.meetingDate })),
-          decisions: (store.decisions || []).map((d: any) => ({
+          meetings: store.meetings.map((m: any) => ({ id: m.id, title: m.title, date: m.meetingDate })),
+          decisions: store.decisions.map((d: any) => ({
             id: d.id,
             statement: d.statement,
             status: d.status,
@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
             effectiveDate: d.effectiveDate,
             rationale: d.rationale,
           })),
-          actionItems: (store.actionItems || []).map((a: any) => ({
+          actionItems: store.actionItems.map((a: any) => ({
             id: a.id,
             title: a.title,
             owner: a.ownerNameRaw,
@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
             status: a.status,
             needsInput: a.needsInput,
           })),
-          conflicts: (store.conflicts || []).map((c: any) => ({
+          conflicts: store.conflicts.map((c: any) => ({
             id: c.id,
             description: c.description,
             severity: c.severity,
@@ -96,12 +96,12 @@ Provide a grounded, professional answer referencing decisions, dates, and assign
           );
 
           // Extract relevant citations based on query context
-          (store.decisions || []).forEach((d: any) => {
+          store.decisions.forEach((d: any) => {
             if (
               qLower.includes(d.topic) ||
               answer.toLowerCase().includes(d.statement.toLowerCase().slice(0, 20))
             ) {
-              if (citations.length < 3 && !citations.some((c) => c.id === d.id)) {
+              if (citations.length < 3 && !citations.some((c: any) => c.id === d.id)) {
                 citations.push({
                   meeting: d.meetingId || "Strategy Sync",
                   meetingId: d.meetingId || SEED_IDS.MEET_1_LAUNCH_PLANNING,
@@ -114,12 +114,12 @@ Provide a grounded, professional answer referencing decisions, dates, and assign
             }
           });
 
-          (store.actionItems || []).forEach((a: any) => {
+          store.actionItems.forEach((a: any) => {
             if (
               qLower.includes(a.ownerNameRaw?.toLowerCase() || "") ||
               answer.toLowerCase().includes(a.title.toLowerCase().slice(0, 20))
             ) {
-              if (citations.length < 4 && !citations.some((c) => c.id === a.id)) {
+              if (citations.length < 4 && !citations.some((c: any) => c.id === a.id)) {
                 citations.push({
                   meeting: a.meetingId || "Strategy Sync",
                   meetingId: a.meetingId || SEED_IDS.MEET_1_LAUNCH_PLANNING,
@@ -132,7 +132,7 @@ Provide a grounded, professional answer referencing decisions, dates, and assign
             }
           });
 
-          (store.conflicts || [])
+          store.conflicts
             .filter((c: any) => c.status === "open")
             .forEach((c: any) => {
               if (
@@ -238,11 +238,10 @@ Provide a grounded, professional answer referencing decisions, dates, and assign
 The active commitment in institutional memory is **15 November 2026**, established during the Launch Planning Sync and reiterated with an Android-first rollout in the Scope Review Sync.
 
 ⚠️ **Pending Reversal & Open Conflict:**
-${
-  hasProposedDec1
-    ? "A new proposal to **postpone the launch to 1 December 2026** was voiced in today's sync due to QA regression backlogs and a desire to ship Android & iOS simultaneously."
-    : "An engineering proposal was logged during the Tech Workshop suggesting a delay to 1 December 2026 for HNSW vector re-indexing."
-}
+${hasProposedDec1
+            ? "A new proposal to **postpone the launch to 1 December 2026** was voiced in today's sync due to QA regression backlogs and a desire to ship Android & iOS simultaneously."
+            : "An engineering proposal was logged during the Tech Workshop suggesting a delay to 1 December 2026 for HNSW vector re-indexing."
+          }
 This is currently flagged as an **Active Policy Conflict (Severity: High)**. Under Momentum's Human-in-the-Loop gate, the 15 Nov date **remains the binding active decision** until an authorized lead explicitly approves the supersede motion in the Review Gate.`;
 
         citations.push(
